@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                            http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.1.xsd
+                            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+                            http://www.springframework.org/schema/context
+                            http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+	<bean id="placeholderConfigGlobal"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>/WEB-INF/db.properties</value>
+			</list>
+		</property>
+
+	</bean>
+
+	<bean id="dataSource" destroy-method="close"
+		class="org.apache.tomcat.jdbc.pool.DataSource">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="initialSize" value="8" />
+		<property name="maxActive" value="16" />
+	</bean>
+
+	<bean id="databaseService"
+		class="org.michiganchineseschool.speech.service.DatabaseServiceImpl">
+		<property name="studentDao" ref="studentDao" />
+		<property name="staffDao" ref="staffDao" />
+		<property name="contestDao" ref="contestDao" />
+		<property name="locationDao" ref="locationDao" />
+		<property name="roleDao" ref="roleDao" />
+		<property name="scoreCountingTypeDao" ref="scoreCountingTypeDao" />
+		<property name="scoreRuleDao" ref="scoreRuleDao" />
+		<property name="timeLimitRuleDao" ref="timeLimitRuleDao" />
+		<property name="scoreRuleItemDao" ref="scoreRuleItemDao" />
+		<property name="contestGroupDao" ref="contestGroupDao" />
+		<property name="contestorDao" ref="contestorDao" />
+		<property name="contestorIndividualDao" ref="contestorIndividualDao" />
+		<property name="judgeDao" ref="judgeDao" />
+		<property name="contestorScoreDao" ref="contestorScoreDao" />
+		<property name="speechScoreDao" ref="speechScoreDao" />
+		<property name="timeScoreDao" ref="timeScoreDao" />
+		<property name="scoreMarkingDao" ref="scoreMarkingDao" />
+		<property name="gradYearDao" ref="gradYearDao" />
+	</bean>
+</beans>

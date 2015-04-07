@@ -1,0 +1,238 @@
+<div class="container">
+
+	<table class="table">
+		<tbody>
+			<tr>
+				<td><label>Contest Group:</label></td>
+				<td><select ng-change="selectedContestGroupChanged()"
+					class="form-control" ng-model="selectedContestGroup"
+					ng-options="(contestGroup.contest.name+ ' - ' +contestGroup.name) for contestGroup in contestGroups">
+						<option value="">-- Please Select the Contest Group --</option>
+				</select></td>
+				<td><button ng-disabled="selectedContestGroup==null"
+						ng-click="selectedContestGroupChanged()" class="btn btn-primary">Refresh</button></td>
+				<td><button
+						ng-disabled="scoreMonitor!=null||selectedContestGroup==null"
+						ng-click="startMonitor()" class="btn btn-success">Start
+						Monitor</button></td>
+				<td><button ng-disabled="scoreMonitor==null"
+						ng-click="stopMonitor()" class="btn btn-danger">Stop
+						Monitor</button></td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div ng-show="selectedContestGroup!=null">
+		<table class="table table-striped"  ng-init="predicate = 'contestOrder'">
+			<thead>
+				<tr>
+				
+					<th><a href=""
+						ng-click="predicate = 'finalRank';
+					reverse=!reverse">名次</a></th>
+					<th><a href=""
+						ng-click="predicate = 'contestOrder';
+					reverse=!reverse">出場順序</a></th>
+					
+					<th><a href=""
+						ng-click="predicate = 'students[0].chineseLastName';
+					reverse=!reverse">學生姓名</a></th>
+					<th><a href=""
+						ng-click="predicate = 'speechTitle';
+					reverse=!reverse">演講題目</a></th>
+					<th><a href=""
+						ng-click="predicate = 'abstained';
+					reverse=!reverse">不到棄權</a></th>
+					<!-- th
+						ng-repeat="scoreRuleItem in selectedContestGroup.scoreRule.scoreRuleItems | orderBy:'priority'">{{scoreRuleItem.name}}
+						-- {{scoreRuleItem.weight}} % -- 總分 --
+						{{selectedContestGroup.scoreCountingType.name}}</th-->
+
+					<th><a href=""
+						ng-click="predicate = 'totalSpeechScore';
+					reverse=!reverse">演講總分/{{selectedContestGroup.scoreCountingType.name}}</a></th>
+
+					<th><a href=""
+						ng-click="predicate = 'totalScoreMarking';
+					reverse=!reverse">違規扣分</a></th>
+
+					<th><a href=""
+						ng-click="predicate = 'totalTimeScore';
+					reverse=!reverse">時間扣分
+							-- {{selectedContestGroup.timeLimitRule.name}}</a></th>
+
+					<th><a href=""
+						ng-click="predicate = 'finalScore';
+					reverse=!reverse">最後分數/{{selectedContestGroup.scoreCountingType.name}}</a></th>
+					<!-- th
+						colspan="{{selectedContestGroup.scoreRule.scoreRuleItems.length}}+1"-->
+					<th
+						ng-repeat="contestorScore in contestors[0].contestorScores | getOnlyRoleFilter:'[1,4]' | orderBy: ['judge.role.idrole','judge.idjudge']:true">{{contestorScore.judge.staff.chineseLastName}}{{contestorScore.judge.staff.chineseFirstName}}-{{contestorScore.judge.role.name}}
+						<!-- table>
+								<tr>
+									<th
+										ng-repeat="scoreRuleItem in selectedContestGroup.scoreRule.scoreRuleItems | orderBy:'priority'">{{scoreRuleItem.name}}
+										{{scoreRuleItem.weight}} %</th>
+								</tr>
+							</table-->
+					</th>
+					<th
+						ng-repeat="contestorScore in contestors[0].contestorScores | getOnlyRoleFilter:'[2]' | orderBy: 'judge.idjudge'">
+						{{contestorScore.judge.staff.chineseLastName}}{{contestorScore.judge.staff.chineseFirstName}}-{{contestorScore.judge.role.name}}<br>
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>計時 -- {{selectedContestGroup.timeLimitRule.name}}</th>
+								</tr>
+							</thead>
+						</table>
+					</th>
+
+					<th
+						ng-repeat="contestorScore in contestors[0].contestorScores | getOnlyRoleFilter:'[4]' | orderBy: 'judge.idjudge'">
+						{{contestorScore.judge.staff.chineseLastName}}{{contestorScore.judge.staff.chineseFirstName}}-{{contestorScore.judge.role.name}}<br>
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>點名扣分</th>
+
+									<th>閃光燈</th>
+
+									<th>接聽電話扣分</th>
+
+									<th>家長提詞 -- 手勢</th>
+
+									<th>不到棄權</th>
+									
+									<th>重覆使用圖片</th>
+								</tr>
+							</thead>
+						</table>
+					</th>
+				</tr>
+				<!-- tr>
+					<th
+						ng-repeat="contestorScore in contestors[0].contestorScores | getOnlyRoleFilter:'[1,4]' | orderBy:'judge.idjudge' | mergeAllContestorsFilter">{{contestorScore.scoreRuleItem.name}}
+						{{contestorScore.scoreRuleItem.weight}} %</th>
+
+				</tr>
+				<tr>
+					<th
+						colspan="{{selectedContestGroup.scoreRule.scoreRuleItems.length}}+1"
+						ng-repeat="contestorScore in contestors[0].contestorScores | getOnlyRoleFilter:'[1,4]' | orderBy: 'judge.idjudge'">總分</th>
+				</tr-->
+			</thead>
+			<tbody>
+				<tr ng-class="{warning: record.abstained}"
+					ng-repeat="record in contestors | orderBy:predicate:reverse">
+					
+					<td>{{record.finalRank}}</td>
+					<td>{{record.contestOrder}}</td>
+					<td><span ng-repeat="student in record.students">{{student.chineseLastName}}{{student.chineseFirstName}}
+							{{student.englishFirstName}} {{student.englishLastName}} </span></td>
+					<td>{{record.speechTitle}}</td>
+					<td><div ng-show="record.abstained">
+							<h4>
+								<span class="label label-danger">棄權</span>
+							</h4>
+						</div>
+						<div ng-hide="record.abstained">
+
+							<h4>
+								<span class="label label-success">到</span>
+							</h4>
+						</div></td>
+					<!-- td
+						ng-repeat="score in record.scoreRuleItemSums | orderBy:'priority'">{{score.speechScore.score}}</td-->
+					<td>{{record.totalSpeechScore}}</td>
+					<td>{{record.totalScoreMarking}}</td>
+					<td>{{record.totalTimeScore}}</td>
+					<td>{{record.finalScore}}</td>
+					<!-- td
+						ng-class="{success: contestorScore.judge.submit, danger: !contestorScore.judge.submit}"
+						ng-repeat="contestorScore in record.contestorScores | getOnlyRoleFilter:'[1,4]' | orderBy:'judge.idjudge' | mergeAllContestorsFilter"-->
+
+					<td
+						ng-class="{success: contestorScore.judge.submit, danger: !contestorScore.judge.submit}"
+						ng-repeat="contestorScore in record.contestorScores | getOnlyRoleFilter:'[1,4]' | orderBy:['judge.role.idrole','judge.idjudge']:true">
+						<!-- {{contestorScore.judge.staff.chineseLastName}}{{contestorScore.judge.staff.chineseFirstName}}-->
+
+						<table class="table table-striped">
+							<tbody>
+								<tr>
+									<td
+										ng-repeat="speechScore in contestorScore.speechScores | orderBy: 'scoreRuleItem.priority'">{{speechScore.score}}</td>
+								</tr>
+								<tr>
+									<td colspan="{{contestorScore.speechScores.length}}"
+										align="center"><h4>
+											<span class="label label-default"
+												ng-class="{'label label-danger': contestorScore.judgeMax, 'label label-warning': contestorScore.judgeMin}">{{contestorScore.speechScoreTotal}}</span>
+										</h4></td>
+								</tr>
+								<tr>
+									<td colspan="{{contestorScore.speechScores.length}}"
+										align="center">{{contestorScore.judgeRank}}</td>
+								</tr>
+
+							</tbody>
+
+
+						</table>
+
+
+					</td>
+
+					<!-- td
+						ng-class="{success: contestorScore.judge.submit, danger: !contestorScore.judge.submit}"
+						ng-repeat="contestorScore in record.contestorScores | getOnlyRoleFilter:'1' | orderBy:'judge.idjudge' | mergeAllContestorsFilter">{{contestorScore.judge.staff.chineseLastName}}{{contestorScore.judge.staff.chineseFirstName}}
+						<table class="table">
+							<tbody>
+								<tr
+									ng-class="{success: contestorScore.judge.submit, danger: !contestorScore.judge.submit}">
+									<td
+										ng-repeat="speechScore in contestorScore.speechScores | orderBy:'scoreRuleItem.priority'">{{speechScore.scoreRuleItem.name}}
+									</td>
+								</tr>
+								<tr
+									ng-class="{success: contestorScore.judge.submit, danger: !contestorScore.judge.submit}">
+									<td
+										ng-repeat="speechScore in contestorScore.speechScores | orderBy:'scoreRuleItem.priority'">{{speechScore.score}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</td-->
+					<td
+						ng-class="{success: contestorScore.judge.submit, danger: !contestorScore.judge.submit}"
+						ng-repeat="contestorScore in record.contestorScores | getOnlyRoleFilter:'[2]' | orderBy:'judge.idjudge'">
+						<table class="table table-striped">
+							<tbody>
+								<tr>
+									<td>{{contestorScore.timeScore.minute}}<br>分<br>
+										{{contestorScore.timeScore.second}}<br>秒<br>({{contestorScore.timeScoreTotal}})
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+					<td
+						ng-class="{success: contestorScore.judge.submit, danger: !contestorScore.judge.submit}"
+						ng-repeat="contestorScore in record.contestorScores | getOnlyRoleFilter:'[4]' | orderBy:'judge.idjudge'">
+						<table class="table table-striped">
+							<tbody>
+								<tr>
+									<td>{{contestorScore.scoreMarking.rollCallMarking}}</td>
+									<td>{{contestorScore.scoreMarking.flashLightMarking}}</td>
+									<td>{{contestorScore.scoreMarking.phoneUsed}}</td>
+									<td>{{contestorScore.scoreMarking.audienceHelper}}</td>
+									<td>{{contestorScore.scoreMarking.absenceText}}</td>
+									<td>{{contestorScore.scoreMarking.samePictureUsed}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

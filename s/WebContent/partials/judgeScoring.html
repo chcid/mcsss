@@ -1,0 +1,794 @@
+<div backdrop="static" class="modal fade" id="stopwatchModal"
+	tabindex="1" role="dialog" aria-labelledby="myModalLabel"
+	aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<table class="table">
+					<tbody>
+						<tr>
+							<td><label>學生姓名:</label></td>
+							<td><span ng-repeat="student in contestorToScore.students">{{student.chineseLastName}}{{student.chineseFirstName}},</span></td>
+						</tr>
+						<tr>
+							<td><label>演講題目:</label></td>
+							<td>{{contestorToScore.speechTitle}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-body">
+				<h1>
+					<span class="label label-success">{{speechStopwatch.data.m}}:{{speechStopwatch.data.s}}:{{speechStopwatch.data.ms}}</span>
+				</h1>
+			</div>
+			<div class="modal-footer">
+				<button ng-hide="speechStopwatch.data.isRunning" type="button"
+					class="btn btn-success btn-lg" ng-click="speechStopwatch.start()">Start</button>
+				<button ng-show="speechStopwatch.data.isRunning" type="button"
+					class="btn  btn-danger btn-lg" ng-click="speechStopwatch.stop()">Stop</button>
+				<button ng-hide="speechStopwatch.data.isRunning" type="button"
+					class="btn  btn-primary btn-lg" data-dismiss="modal"
+					ng-click="applySpeechStopwatch()">Apply</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="resetStopwatchModal" tabindex="-1"
+	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header"></div>
+			<div class="modal-body">
+				<h5 class="modal-title" id="myModalLabel">Are you sure you want
+					to reset the Stop Watch?</h5>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-lg" data-dismiss="modal">No</button>
+				<button type="button" class="btn  btn-primary btn-lg"
+					data-dismiss="modal" ng-click="speechStopwatch.reset()">Yes</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="passwordIncorrectModal" tabindex="-1"
+	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header"></div>
+			<div class="modal-body">
+				<h2 class="modal-title" id="myModalLabel">
+					<span class="label label-danger">PIN is Incorrect!</span>
+				</h2>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn  btn-primary btn-lg"
+					data-dismiss="modal">OK</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="signAndSubmitModal" tabindex="-1"
+	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h2 class="modal-title" id="myModalLabel">
+					<span class="label label-danger">Please Note:</span>
+				</h2>
+			</div>
+			<div class="modal-body">
+				<div class="alert alert-error">
+					<h4>
+						Once you sign and submit, you won't be able to come back to <span
+							class="label label-warning">View or Modify</span> the Score
+						Sheet.
+					</h4>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default btn-lg"
+					data-dismiss="modal">Cancel</button>
+				<button ng-click="doSignAndSubmit()" type="button"
+					class="btn btn-danger btn-primary btn-lg" data-dismiss="modal">Continue
+					to Sign</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+	<div ng-hide="isScoring" ng-init="isScoring=false">
+		<div id="judgeLoginTable" ng-show="selectContestGroups == nul">
+			<table class="table">
+				<tbody>
+					<!-- tr>
+						<td><label>Filter: </td>
+						<td></label> <input type="text" ng-model="loginNameFilter" /> </label></td>
+					</tr-->
+					<tr>
+						<td><label>Name:</label></td>
+						<td><select class="form-control" ng-model="selectedStaff"
+							ng-options="(selectLoginStaff.chineseLastName+''+selectLoginStaff.chineseFirstName+' - '+selectLoginStaff.englishLastName+', '+selectLoginStaff.englishFirstName ) for selectLoginStaff in selectLoginStaffs | filter:loginNameFilter | orderBy:'englishLastName'">
+								<option value="">-- Please Select your name --</option>
+						</select></td>
+					</tr>
+					<tr>
+						<td><label>Pin:</label></td>
+						<td><input type="password" ng-model="password" /></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td align="right"><button ng-click="selectedStaffChanged()"
+								class="btn btn-success btn-large" type="button">Start</button></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="judgeContestgroupTable" ng-show="selectContestGroups != null">
+			<table class="table">
+				<tbody>
+					<tr>
+						<td><label>{{selectedStaff.chineseLastName}}{{selectedStaff.chineseFirstName}}
+								- {{selectedStaff.englishLastName}},
+								{{selectedStaff.englishFirstName}}<br>Please select the
+								Group to Score:
+						</label></td>
+					</tr>
+					<tr>
+						<td><select ng-change="selectedContestGroupChanged()"
+							class="form-control" ng-model="selectedContestGroup"
+							ng-options="(selectContestGroup.contest.name+' - '+selectContestGroup.name+' - '+selectContestGroup.role.name) group by selectContestGroup.contestLocation.name for selectContestGroup in selectContestGroups | orderBy:'name'">
+								<option value="">-- Please Select one --</option>
+						</select></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div ng-show="selectedContestGroup != null">
+			<div ng-switch on="selectedContestGroup.role.idrole">
+				<div id="judgeScoreSheetTable" ng-switch-when="1">
+					<!-- Filter: <input ng-model="filterText" type="text"><br-->
+					<table class="table table-striped"
+						ng-init="predicate = 'contestOrder'">
+						<!-- thead>
+							<tr>
+								<th><a href=""
+									ng-click="predicate = 'contestOrder';
+					reverse=!reverse">順序</a></th>
+								<th><a href=""
+									ng-click="predicate = 'students';
+					reverse=!reverse">學生姓名</a></th>
+								<th><a href=""
+									ng-click="predicate = 'speechTitle';
+					reverse=!reverse">演講題目</a></th>
+								<th
+									ng-repeat="scoreRuleItem in selectedContestGroup.scoreRule.scoreRuleItems | orderBy:'priority'">{{scoreRuleItem.name}}
+									{{scoreRuleItem.weight}} %</th>
+								<th><a href=""
+									ng-click="predicate = 'totalScore';
+					reverse=!reverse">總分</a></th>
+								<th><a href=""
+									ng-click="predicate = 'finalRank';
+					reverse=!reverse">評審排名</a></th-->
+						<!-- th><a href=""
+									ng-click="predicate = 'scoreDiffBefore';
+					reverse=!reverse">總分差前</a></th>
+								<th><a href=""
+									ng-click="predicate = 'scoreDiffAfter';
+					reverse=!reverse">總分差後</a></th-->
+						<!-- th>action</th-->
+						<!-- /tr>
+						</thead-->
+						<thead>
+							<tr>
+								<th>順序</th>
+								<th>學生姓名</th>
+								<th>演講題目</th>
+								<th
+									ng-repeat="scoreRuleItem in selectedContestGroup.scoreRule.scoreRuleItems | orderBy:'priority'">{{scoreRuleItem.name}}
+									{{scoreRuleItem.weight}} %</th>
+								<th>總分</th>
+								<th>評審排名</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-class="{danger: record.abstained}"
+								ng-repeat="record in contestorsForJudgeToScore | filter:filterText | orderBy:predicate:reverse">
+								<td>{{record.contestOrder}}</td>
+								<td><span ng-repeat="student in record.students">{{student.chineseLastName}}{{student.chineseFirstName}},</span><span
+									ng-if="record.abstained"><h4>
+											<span class="label label-danger">棄權</span>
+										</h4></span></td>
+								<td>{{record.speechTitle}}</td>
+								<td
+									ng-class="{success:score.speechScore.idspeech_score==justUpdatedId}"
+									ng-repeat="score in record.scoreRuleItems | orderBy:'priority'">
+									<!-- {{score.speechScore.score}}--> <select
+									ng-change="submitScore(record, score.speechScore.idspeech_score)"
+									style="width: 72px;" class="form-control"
+									ng-model="score.speechScore.score"
+									ng-options="value as value for value in scoreRanges">
+										<option value="">-0-</option>
+								</select>
+								</td>
+								<td>{{record.totalScore}}</td>
+								<td>{{record.finalRank}}</td>
+								<!-- td>{{record.scoreDiffBefore}}</td>
+								<td>{{record.scoreDiffAfter}}</td-->
+								<!-- td><a ng-click='doScore(record)'
+									class="btn btn-default btn-lg" href=""> <i
+										class="fa fa-pencil fa-lg"></i>
+								</a></td-->
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div id="timerScoreSheetTable" ng-switch-when="2">
+					<!-- Filter: <input ng-model="filterText" type="text"><br-->
+					<table class="table table-striped"
+						ng-init="predicate = 'contestOrder'">
+						<!-- thead>
+							<tr>
+								<th><a href=""
+									ng-click="predicate = 'contestOrder';
+					reverse=!reverse">順序</a></th>
+								<th><a href=""
+									ng-click="predicate = 'students';
+					reverse=!reverse">學生姓名</a></th>
+								<th><a href=""
+									ng-click="predicate = 'speechTitle';
+					reverse=!reverse">演講題目</a></th>
+
+								<th><a href=""
+									ng-click="predicate = 'timeScore';
+					reverse=!reverse">計時
+										- {{selectedContestGroup.timeLimitRule.name}}</a></th>
+
+								<th><a href=""
+									ng-click="predicate = 'timeScore';
+					reverse=!reverse">計時扣分</a></th-->
+
+						<!-- th><a href=""
+									ng-click="predicate = 'scoreMarking.rollCallMarking';
+					reverse=!reverse">點名扣分</a></th>
+
+								<th><a href=""
+									ng-click="predicate = 'scoreMarking.flashLightMarking';
+					reverse=!reverse">閃光燈</a></th>
+
+								<th><a href=""
+									ng-click="predicate = 'scoreMarking.phoneUsed';
+					reverse=!reverse">接聽電話扣分</a></th>
+
+								<th><a href=""
+									ng-click="predicate = 'scoreMarking.audienceHelper';
+					reverse=!reverse">家長提詞
+										/ 手勢</a></th>
+
+								<th><a href=""
+									ng-click="predicate = 'scoreMarking.absence';
+					reverse=!reverse">不到棄權</a></th-->
+
+						<!-- th>action</th>
+							</tr>
+						</thead -->
+						<thead>
+							<tr>
+								<th>順序</th>
+								<th>學生姓名</th>
+								<th>演講題目</th>
+
+								<th>計時 - {{selectedContestGroup.timeLimitRule.name}}</th>
+
+								<th>計時扣分</th>
+
+
+								<th>action</th>
+							</tr>
+						<tbody>
+							<tr ng-class="{danger: record.abstained}"
+								ng-repeat="record in contestorsForJudgeToScore | filter:filterText | orderBy:predicate:reverse">
+								<td>{{record.contestOrder}}</td>
+								<td><span ng-repeat="student in record.students">{{student.chineseLastName}}{{student.chineseFirstName}},</span><span
+									ng-if="record.abstained"><h4>
+											<span class="label label-danger">棄權</span>
+										</h4></span></td>
+								<td>{{record.speechTitle}}</td>
+								<td>{{record.timeScore.minute}} 分
+									{{record.timeScore.second}} 秒</td>
+								<td>{{record.judgeTimeScore}}</td>
+								<!-- td>{{record.scoreMarking.rollCallMarking}}</td>
+								<td>{{record.scoreMarking.flashLightMarking}}</td>
+								<td>{{record.scoreMarking.phoneUsed}}</td>
+								<td>{{record.scoreMarking.audienceHelper}}</td>
+								<td>{{record.scoreMarking.absenceText}}</td-->
+								<td><a ng-click='doScore(record)'
+									class="btn btn-default btn-lg" href=""> <i
+										class="fa fa-pencil fa-lg"></i>
+								</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div ng-switch-when="4">
+					<table class="table table-striped"
+						ng-init="predicate = 'contestOrder'">
+						<!-- thead>
+							<tr>
+								<th><a href=""
+									ng-click="predicate = 'contestOrder';
+					reverse=!reverse">順序</a></th>
+								<th><a href=""
+									ng-click="predicate = 'students';
+					reverse=!reverse">學生姓名</a></th>
+								<th><a href=""
+									ng-click="predicate = 'speechTitle';
+					reverse=!reverse">演講題目</a></th>
+								<th
+									ng-repeat="scoreRuleItem in selectedContestGroup.scoreRule.scoreRuleItems | orderBy:'priority'">{{scoreRuleItem.name}}
+									{{scoreRuleItem.weight}} %</th>
+								<th><a href=""
+									ng-click="predicate = 'totalScore';
+					reverse=!reverse">總分</a></th>
+								<th><a href=""
+									ng-click="predicate = 'finalRank';
+					reverse=!reverse">評審排名</a></th-->
+						<!-- th><a href=""
+									ng-click="predicate = 'scoreDiffBefore';
+					reverse=!reverse">總分差前</a></th>
+								<th><a href=""
+									ng-click="predicate = 'scoreDiffAfter';
+					reverse=!reverse">總分差後</a></th-->
+						<!-- th><a href=""
+									ng-click="predicate = 'scoreMarking.rollCallMarking';
+					reverse=!reverse">點名扣分</a></th>
+
+								<th><a href=""
+									ng-click="predicate = 'scoreMarking.flashLightMarking';
+					reverse=!reverse">閃光燈</a></th>
+
+								<th><a href=""
+									ng-click="predicate = 'scoreMarking.phoneUsed';
+					reverse=!reverse">接聽電話扣分</a></th>
+
+								<th><a href=""
+									ng-click="predicate = 'scoreMarking.audienceHelper';
+					reverse=!reverse">家長提詞
+										/ 手勢</a></th>
+
+								<th><a href=""
+									ng-click="predicate = 'scoreMarking.absence';
+					reverse=!reverse">不到棄權</a></th>
+								<th><a href=""
+									ng-click="predicate = 'scoreMarking.samePictureUsed';
+					reverse=!reverse">重覆使用圖片</a></th-->
+						<!-- th>action</th-->
+						<!-- /tr>
+						</thead-->
+						<thead>
+							<tr>
+								<th>順序</th>
+								<th>學生姓名</th>
+								<th>演講題目</th>
+								<th
+									ng-repeat="scoreRuleItem in selectedContestGroup.scoreRule.scoreRuleItems | orderBy:'priority'">{{scoreRuleItem.name}}
+									{{scoreRuleItem.weight}} %</th>
+								<th>總分</th>
+								<th>評審排名</th>
+								<th>點名扣分</th>
+
+								<th>閃光燈</th>
+
+								<th>接聽電話扣分</th>
+
+								<th>家長提詞 / 手勢</th>
+
+								<th>不到棄權</th>
+								<th
+									ng-if="selectedContestGroup.scoreRule.name.indexOf('看圖說故事') === 0">重覆使用圖片</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-class="{danger: record.abstained}"
+								ng-repeat="record in contestorsForJudgeToScore | filter:filterText | orderBy:predicate:reverse">
+								<td>{{record.contestOrder}}</td>
+								<td><span ng-repeat="student in record.students">{{student.chineseLastName}}{{student.chineseFirstName}},</span><span
+									ng-if="record.abstained"><h4>
+											<span class="label label-danger">棄權</span>
+										</h4></span></td>
+								<td>{{record.speechTitle}}</td>
+								<td
+									ng-class="{success:score.speechScore.idspeech_score==justUpdatedId}"
+									ng-repeat="score in record.scoreRuleItems | orderBy:'priority'">
+									<!-- {{score.speechScore.score}}--> <select
+									ng-disabled="isUpdating"
+									ng-change="submitScore(record, score.speechScore.idspeech_score)"
+									style="width: 77px;" class="form-control"
+									ng-model="score.speechScore.score"
+									ng-options="value as value for value in scoreRanges">
+										<option value="">-0-</option>
+								</select>
+								</td>
+								<td>{{record.totalScore}}</td>
+								<td>{{record.finalRank}}</td>
+								<!-- td>{{record.scoreDiffBefore}}</td>
+								<td>{{record.scoreDiffAfter}}</td-->
+								<td><input ng-change="submitScore(record)"
+									ng-model="record.scoreMarking.rollCallMarking"
+									ng-true-value="-1" ng-false-value="0"
+									ng-checked="record.scoreMarking.rollCallMarking=='-1'"
+									type="checkbox" />
+									<h4>
+										<span class="label label-default"
+											ng-class="{'label label-warning':record.scoreMarking.rollCallMarking=='-1','label label-default':record.scoreMarking.rollCallMarking!='-1'}">{{record.scoreMarking.rollCallMarking}}</span>
+									</h4></td>
+								<td><input ng-change="submitScore(record)"
+									ng-model="record.scoreMarking.flashLightMarking"
+									ng-true-value="-1" ng-false-value="0"
+									ng-checked="record.scoreMarking.flashLightMarking=='-1'"
+									type="checkbox" />
+									<h4>
+										<span class="label label-default"
+											ng-class="{'label label-warning':record.scoreMarking.flashLightMarking=='-1','label label-default':record.scoreMarking.flashLightMarking!='-1'}">{{record.scoreMarking.flashLightMarking}}</span>
+									</h4></td>
+								<td><input ng-change="submitScore(record)"
+									ng-model="record.scoreMarking.phoneUsed" ng-true-value="-2"
+									ng-false-value="0"
+									ng-checked="record.scoreMarking.phoneUsed=='-2'"
+									type="checkbox" />
+									<h4>
+										<span class="label label-default"
+											ng-class="{'label label-warning':record.scoreMarking.phoneUsed=='-2','label label-default':record.scoreMarking.phoneUsed!='-2'}">{{record.scoreMarking.phoneUsed}}</span>
+									</h4></td>
+								<td><input ng-change="submitScore(record)"
+									ng-model="record.scoreMarking.audienceHelper"
+									ng-true-value="-2" ng-false-value="0"
+									ng-checked="record.scoreMarking.audienceHelper=='-2'"
+									type="checkbox" />
+									<h4>
+										<span class="label label-default"
+											ng-class="{'label label-warning':record.scoreMarking.audienceHelper=='-2','label label-default':record.scoreMarking.audienceHelper!='-2'}">{{record.scoreMarking.audienceHelper}}</span>
+									</h4></td>
+								<td><input ng-change="submitScore(record)"
+									ng-model="record.scoreMarking.absence" ng-true-value="-1"
+									ng-false-value="0"
+									ng-checked="record.scoreMarking.absence=='-1'" type="checkbox" />
+									<h4>
+										<span class="label label-default"
+											ng-class="{'label label-danger':record.scoreMarking.absence=='-1','label label-default':record.scoreMarking.absence!='-1'}">棄權</span>
+									</h4></td>
+								<td
+									ng-if="selectedContestGroup.scoreRule.name.indexOf('看圖說故事') === 0"><input
+									ng-change="submitScore(record)"
+									ng-model="record.scoreMarking.samePictureUsed"
+									ng-true-value="-10" ng-false-value="0"
+									ng-checked="record.scoreMarking.samePictureUsed=='-10'"
+									type="checkbox" />
+									<h4>
+										<span class="label label-default"
+											ng-class="{'label label-warning':record.scoreMarking.samePictureUsed=='-10','label label-default':record.scoreMarking.samePictureUsed!='-10'}">{{record.scoreMarking.samePictureUsed}}</span>
+									</h4></td>
+								<!-- td><a ng-click='doScore(record)'
+									class="btn btn-default btn-lg" href=""> <i
+										class="fa fa-pencil fa-lg"></i>
+								</a></td-->
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<!-- end of ng-switch -->
+			<div align="right">
+				<button ng-disabled="!isCanBeSubmited" data-toggle="modal" data-target="#signAndSubmitModal"
+					class="btn btn-danger">Sign and Submit ~
+					{{selectedStaff.chineseLastName}}{{selectedStaff.chineseFirstName}}</button>
+			</div>
+		</div>
+	</div>
+	<div id="contestorToScoreTable" ng-show="isScoring">
+		<div ng-switch on="selectedContestGroup.role.idrole">
+			<table ng-switch-when="1" class="table">
+				<tbody>
+					<tr>
+						<td><label>學生姓名:</label></td>
+						<td><span ng-repeat="student in contestorToScore.students">{{student.chineseLastName}}{{student.chineseFirstName}},</span></td>
+					</tr>
+					<tr>
+						<td><label>演講題目:</label></td>
+						<td>{{contestorToScore.speechTitle}}</td>
+					</tr>
+					<tr
+						ng-repeat="scoreRuleItem in contestorToScore.scoreRuleItems | orderBy:'priority'">
+						<td><label>{{scoreRuleItem.name}}({{scoreRuleItem.weight}}%):</label></td>
+						<td>
+							<!-- span class="label label-danger">80</span--> <!-- input
+						type="text" ng-model="scoreRuleItem.speechScore.score"
+						value="{{scoreRuleItem.speechScore.score}}" size="3" /--> <select
+							class="form-control" ng-model="scoreRuleItem.speechScore.score"
+							ng-options="value as value for value in scoreRanges">
+								<option value="">-- score --</option>
+						</select> <!-- span class="label label-success">100</span-->
+						</td>
+					</tr>
+					<tr>
+						<td aling="left"><button ng-click="cancelScore();"
+								type="button" class="btn btn-default btn-lg">Cancel</button></td>
+						<td align="right">
+							<button ng-click="submitScore(contestorToScore)" type="button"
+								class="btn btn-primary btn-lg">Save</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<table ng-switch-when="2" class="table">
+				<tbody>
+					<tr>
+						<td><label>學生姓名:</label></td>
+						<td><span ng-repeat="student in contestorToScore.students">{{student.chineseLastName}}{{student.chineseFirstName}},</span></td>
+					</tr>
+					<tr>
+						<td><label>演講題目:</label></td>
+						<td>{{contestorToScore.speechTitle}}</td>
+					</tr>
+					<tr>
+						<td>
+							<!-- label>時間:</label-->
+							<table class="table" style="background: inherit;">
+								<tbody>
+									<tr>
+										<td colspan="2"><button ng-hide="isUsingStopwatch"
+												type="button" class="btn btn-warning btn-lg"
+												ng-click="toUseStopwatch()">使用碼表</button>
+											<div ng-show="isUsingStopwatch">
+												<button
+													ng-disabled="speechStopwatch.data.intM!=0 || speechStopwatch.data.intS!=0"
+													ng-hide="speechStopwatch.data.isRunning" type="button"
+													class="btn btn-success btn-lg"
+													ng-click="speechStopwatch.start()">開始 -
+													{{speechStopwatch.data.m}}:{{speechStopwatch.data.s}}:{{speechStopwatch.data.ms}}</button>
+												<button ng-show="speechStopwatch.data.isRunning"
+													type="button" class="btn  btn-danger btn-lg"
+													ng-click="speechStopwatch.stop()">停 -
+													{{speechStopwatch.data.m}}:{{speechStopwatch.data.s}}:{{speechStopwatch.data.ms}}</button>
+
+											</div></td>
+
+									</tr>
+									<tr>
+										<td align="left"><div ng-show="isUsingStopwatch">
+												<div>
+													<button
+														ng-hide="speechStopwatch.data.isRunning || (speechStopwatch.data.intM == 0 && speechStopwatch.data.intS == 0)"
+														type="button" class="btn  btn-danger btn-lg"
+														data-dismiss="modal" ng-click="speechStopwatch.reset()">歸零</button>
+												</div>
+											</div></td>
+										<td align="right"><div ng-show="isUsingStopwatch">
+												<div>
+													<button
+														ng-hide="speechStopwatch.data.isRunning || (speechStopwatch.data.intM == 0 && speechStopwatch.data.intS == 0)"
+														type="button" class="btn  btn-info btn-lg"
+														data-dismiss="modal" ng-click="applySpeechStopwatch()">Apply</button>
+												</div>
+											</div></td>
+									</tr>
+								</tbody>
+							</table> <!-- div>
+								<div style="float: left;">
+									<h4>
+										<span class="label label-success">{{speechStopwatch.data.m}}:{{speechStopwatch.data.s}}:{{speechStopwatch.data.ms}}</span>
+									</h4>
+								</div>
+								<div align="left" style="float: left; padding-left: 15px;">
+									<botton ng-click="applySpeechStopwatch()"
+										class="btn btn-primary btn-sm">Apply</botton>
+								</div>
+							</div>
+							<div style="padding-top: 15px; clear: both;">
+								<div style="float: left; width: 33%;">
+									<a ng-click='speechStopwatch.start()' data-toggle="modal"
+										data-target="#stopwatchModal"> <i class="fa fa-play fa-lg"></i>
+									</a>
+								</div>
+								<div align="center" style="float: left; width: 33%;">
+									<span class="label label-danger"><a data-toggle="modal"
+										data-target="#resetStopwatchModal"><i
+											class="fa fa-refresh fa-lg"></i></a></span>
+								</div>
+								<div align="right "float:rigth; width: 34%;">
+									<a ng-click='speechStopwatch.stop()'><i
+										class="fa fa-pause fa-lg"></i></a>
+								</div>
+							</div-->
+						</td>
+						<td>
+							<table class="table" style="background: inherit;">
+								<tr>
+									<td>
+										<!-- input size="2" type="text"
+						ng-model="contestorToScore.timeScore.minute"
+						value="{{contestorToScore.timeScore.minute}}"--> <select
+										style="width: 65px;" class="form-control"
+										ng-model="contestorToScore.timeScore.minute"
+										ng-options="value as value for value in minuteRanges">
+									</select>
+									</td>
+									<td>分</td>
+								</tr>
+								<tr>
+									<td>
+										<!-- input size="2" type="text"
+						ng-model="contestorToScore.timeScore.second"
+						value="
+						{{contestorToScore.timeScore.second}}"--> <select
+										style="width: 65px;" class="form-control"
+										ng-model="contestorToScore.timeScore.second"
+										ng-options="value as value for value in secondRanges">
+									</select>
+									</td>
+									<td>秒</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<!-- tr ng-show="isUsingStopwatch">
+						<td>
+							<h1>
+								<span class="label label-warning">{{speechStopwatch.data.m}}:{{speechStopwatch.data.s}}:{{speechStopwatch.data.ms}}</span>
+							</h1>
+						</td>
+						<td valign="bottom">
+							<button
+								ng-hide="speechStopwatch.data.isRunning" type="button"
+								class="btn btn-success btn-lg"
+								ng-click="speechStopwatch.start()">Start</button>
+							<button ng-show="speechStopwatch.data.isRunning" type="button"
+								class="btn  btn-danger btn-lg" ng-click="speechStopwatch.stop()">Stop</button>
+							<button ng-hide="speechStopwatch.data.isRunning" type="button"
+								class="btn  btn-info btn-lg" data-dismiss="modal"
+								ng-click="applySpeechStopwatch()">Apply</button>
+						</td>
+					</tr-->
+					<!-- tr>
+						<td><label>點名扣分:</label></td>
+						<td><input
+							ng-model="contestorToScore.scoreMarking.rollCallMarking"
+							ng-true-value="-1" ng-false-value="0"
+							ng-checked="contestorToScore.scoreMarking.rollCallMarking=='-1'"
+							type="checkbox" /> <label>違規</label></td>
+
+					</tr>
+					<tr>
+						<td><label>閃光燈:</label></td>
+						<td><input
+							ng-model="contestorToScore.scoreMarking.flashLightMarking"
+							ng-true-value="-1" ng-false-value="0"
+							ng-checked="contestorToScore.scoreMarking.flashLightMarking=='-1'"
+							type="checkbox" /> <label>違規</label></td>
+					</tr>
+					<tr>
+						<td><label>接聽電話扣分:</label></td>
+						<td><input ng-model="contestorToScore.scoreMarking.phoneUsed"
+							ng-true-value="-2" ng-false-value="0"
+							ng-checked="contestorToScore.scoreMarking.phoneUsed=='-2'"
+							type="checkbox" /> <label>違規</label></td>
+					</tr>
+					<tr>
+						<td><label>家長提詞/手勢:</label></td>
+						<td><input
+							ng-model="contestorToScore.scoreMarking.audienceHelper"
+							ng-true-value="-2" ng-false-value="0"
+							ng-checked="contestorToScore.scoreMarking.audienceHelper=='-2'"
+							type="checkbox" /> <label>違規</label></td>
+					</tr>
+					<tr>
+						<td><label>不到棄權:</label></td>
+						<td><input ng-model="contestorToScore.scoreMarking.absence"
+							ng-true-value="-1" ng-false-value="0"
+							ng-checked="contestorToScore.scoreMarking.absence=='-1'"
+							type="checkbox" /> <label>棄權</label></td>
+					</tr-->
+					<tr ng-hide="speechStopwatch.data.isRunning">
+						<td aling="left"><button ng-click="cancelScore()"
+								type="button" class="btn btn-default btn-lg">Cancel</button></td>
+						<td align="right">
+							<button ng-click="submitScore(contestorToScore)" type="button"
+								class="btn btn-primary btn-lg">Save</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<table ng-switch-when="4" class="table">
+				<tbody>
+					<tr>
+						<td><label>學生姓名:</label></td>
+						<td><span ng-repeat="student in contestorToScore.students">{{student.chineseLastName}}{{student.chineseFirstName}},</span></td>
+					</tr>
+					<tr>
+						<td><label>演講題目:</label></td>
+						<td>{{contestorToScore.speechTitle}}</td>
+					</tr>
+					<tr
+						ng-repeat="scoreRuleItem in contestorToScore.scoreRuleItems | orderBy:'priority'">
+						<td><label>{{scoreRuleItem.name}}({{scoreRuleItem.weight}}%):</label></td>
+						<td>
+							<!-- span class="label label-danger">80</span--> <!-- input
+						type="text" ng-model="scoreRuleItem.speechScore.score"
+						value="{{scoreRuleItem.speechScore.score}}" size="3" /--> <select
+							class="form-control" ng-model="scoreRuleItem.speechScore.score"
+							ng-options="value as value for value in scoreRanges">
+								<option value="">-- score --</option>
+						</select> <!-- span class="label label-success">100</span-->
+						</td>
+					</tr>
+					<tr>
+						<td><label>點名扣分:</label></td>
+						<td><input
+							ng-model="contestorToScore.scoreMarking.rollCallMarking"
+							ng-true-value="-1" ng-false-value="0"
+							ng-checked="contestorToScore.scoreMarking.rollCallMarking=='-1'"
+							type="checkbox" /> <label>違規</label></td>
+
+					</tr>
+					<tr>
+						<td><label>閃光燈:</label></td>
+						<td><input
+							ng-model="contestorToScore.scoreMarking.flashLightMarking"
+							ng-true-value="-1" ng-false-value="0"
+							ng-checked="contestorToScore.scoreMarking.flashLightMarking=='-1'"
+							type="checkbox" /> <label>違規</label></td>
+					</tr>
+					<tr>
+						<td><label>接聽電話扣分:</label></td>
+						<td><input ng-model="contestorToScore.scoreMarking.phoneUsed"
+							ng-true-value="-2" ng-false-value="0"
+							ng-checked="contestorToScore.scoreMarking.phoneUsed=='-2'"
+							type="checkbox" /> <label>違規</label></td>
+					</tr>
+					<tr>
+						<td><label>家長提詞/手勢:</label></td>
+						<td><input
+							ng-model="contestorToScore.scoreMarking.audienceHelper"
+							ng-true-value="-2" ng-false-value="0"
+							ng-checked="contestorToScore.scoreMarking.audienceHelper=='-2'"
+							type="checkbox" /> <label>違規</label></td>
+					</tr>
+					<tr>
+						<td><label>不到棄權:</label></td>
+						<td><input ng-model="contestorToScore.scoreMarking.absence"
+							ng-true-value="-1" ng-false-value="0"
+							ng-checked="contestorToScore.scoreMarking.absence=='-1'"
+							type="checkbox" /> <label>棄權</label></td>
+					</tr>
+					<tr>
+						<td><label>重覆使用圖片:</label></td>
+						<td><input
+							ng-model="contestorToScore.scoreMarking.samePictureUsed"
+							ng-true-value="-10" ng-false-value="0"
+							ng-checked="contestorToScore.scoreMarking.samePictureUsed=='-10'"
+							type="checkbox" /> <label>違規</label></td>
+					</tr>
+					<tr>
+						<td aling="left"><button ng-click="cancelScore();"
+								type="button" class="btn btn-default btn-lg">Cancel</button></td>
+						<td align="right">
+							<button ng-click="submitScore(contestorToScore)" type="button"
+								class="btn btn-primary btn-lg">Save</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<!-- end of ng-switch for scoring modal -->
+	</div>
+</div>

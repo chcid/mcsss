@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                            http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.1.xsd
+                            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+                            http://www.springframework.org/schema/context
+                            http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+
+	<bean id="studentDao" class="org.michiganchineseschool.speech.dao.StudentDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="staffDao" class="org.michiganchineseschool.speech.dao.StaffDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="contestDao" class="org.michiganchineseschool.speech.dao.ContestDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="locationDao" class="org.michiganchineseschool.speech.dao.LocationDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="roleDao" class="org.michiganchineseschool.speech.dao.RoleDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="scoreCountingTypeDao"
+		class="org.michiganchineseschool.speech.dao.ScoreCountingTypeDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="scoreRuleDao" class="org.michiganchineseschool.speech.dao.ScoreRuleDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="timeLimitRuleDao"
+		class="org.michiganchineseschool.speech.dao.TimeLimitRuleDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="scoreRuleItemDao"
+		class="org.michiganchineseschool.speech.dao.ScoreRuleItemDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="contestGroupDao"
+		class="org.michiganchineseschool.speech.dao.ContestGroupDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="contestorDao" class="org.michiganchineseschool.speech.dao.ContestorDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="contestorIndividualDao"
+		class="org.michiganchineseschool.speech.dao.ContestorIndividualDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="judgeDao" class="org.michiganchineseschool.speech.dao.JudgeDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="contestorScoreDao"
+		class="org.michiganchineseschool.speech.dao.ContestorScoreDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="speechScoreDao" class="org.michiganchineseschool.speech.dao.SpeechScoreDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="timeScoreDao" class="org.michiganchineseschool.speech.dao.TimeScoreDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="scoreMarkingDao"
+		class="org.michiganchineseschool.speech.dao.ScoreMarkingDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="gradYearDao" class="org.michiganchineseschool.speech.dao.GradYearDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+</beans>
