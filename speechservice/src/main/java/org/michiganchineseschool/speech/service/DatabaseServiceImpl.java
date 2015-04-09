@@ -1481,9 +1481,19 @@ public class DatabaseServiceImpl implements DatabaseService {
 			contestors.remove(contestor);
 		}
 		Collections.sort(contestors);
-		int rank = 1;
+		int index = 0;
+		int rank = index + 1;
+		Contestor preContestor = null;
+
 		for (Contestor contestor : contestors) {
-			contestor.setFinalRank(rank++);
+			if (index != 0) {
+				if (contestor.compareTo(preContestor) != 0) {
+					rank = index + 1;
+				}
+			}
+			contestor.setFinalRank(rank);
+			preContestor = contestor;
+			index++;
 		}
 		// add the abstained back to list
 		for (Contestor contestor : absTaineds) {

@@ -66,15 +66,15 @@
 					reverse=!reverse">最後分數/{{selectedContestGroup.scoreCountingType.name}}</a></th>
 					<!-- th
 						colspan="{{selectedContestGroup.scoreRule.scoreRuleItems.length}}+1"-->
-					<th
+					<th valign="top" height="100%"
 						ng-repeat="contestorScore in contestors[0].contestorScores | getOnlyRoleFilter:'[1,4]' | orderBy: ['judge.role.idrole','judge.idjudge']:true">{{contestorScore.judge.staff.chineseLastName}}{{contestorScore.judge.staff.chineseFirstName}}-{{contestorScore.judge.role.name}}
-						<!-- table>
+						<table border="0">
 								<tr>
-									<th
+									<th width="33%"
 										ng-repeat="scoreRuleItem in selectedContestGroup.scoreRule.scoreRuleItems | orderBy:'priority'">{{scoreRuleItem.name}}
 										{{scoreRuleItem.weight}} %</th>
 								</tr>
-							</table-->
+							</table>
 					</th>
 					<th
 						ng-repeat="contestorScore in contestors[0].contestorScores | getOnlyRoleFilter:'[2]' | orderBy: 'judge.idjudge'">
