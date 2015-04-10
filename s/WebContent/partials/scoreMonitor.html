@@ -68,9 +68,9 @@
 						colspan="{{selectedContestGroup.scoreRule.scoreRuleItems.length}}+1"-->
 					<th valign="top" height="100%"
 						ng-repeat="contestorScore in contestors[0].contestorScores | getOnlyRoleFilter:'[1,4]' | orderBy: ['judge.role.idrole','judge.idjudge']:true">{{contestorScore.judge.staff.chineseLastName}}{{contestorScore.judge.staff.chineseFirstName}}-{{contestorScore.judge.role.name}}
-						<table border="0">
+						<table border="1" width="120px">
 								<tr>
-									<th width="33%"
+									<th width="33%" valign="top"
 										ng-repeat="scoreRuleItem in selectedContestGroup.scoreRule.scoreRuleItems | orderBy:'priority'">{{scoreRuleItem.name}}
 										{{scoreRuleItem.weight}} %</th>
 								</tr>
@@ -79,7 +79,7 @@
 					<th
 						ng-repeat="contestorScore in contestors[0].contestorScores | getOnlyRoleFilter:'[2]' | orderBy: 'judge.idjudge'">
 						{{contestorScore.judge.staff.chineseLastName}}{{contestorScore.judge.staff.chineseFirstName}}-{{contestorScore.judge.role.name}}<br>
-						<table class="table table-striped">
+						<table border="1">
 							<thead>
 								<tr>
 									<th>計時 -- {{selectedContestGroup.timeLimitRule.name}}</th>
@@ -91,20 +91,20 @@
 					<th
 						ng-repeat="contestorScore in contestors[0].contestorScores | getOnlyRoleFilter:'[4]' | orderBy: 'judge.idjudge'">
 						{{contestorScore.judge.staff.chineseLastName}}{{contestorScore.judge.staff.chineseFirstName}}-{{contestorScore.judge.role.name}}<br>
-						<table class="table table-striped">
+						<table  border="1">
 							<thead>
 								<tr>
-									<th>點名扣分</th>
+									<th width="16%">點名扣分</th>
 
-									<th>閃光燈</th>
+									<th width="16%">閃光燈</th>
 
-									<th>接聽電話扣分</th>
+									<th width="16%">接聽電話扣分</th>
 
-									<th>家長提詞 -- 手勢</th>
+									<th width="16%">家長提詞 -- 手勢</th>
 
-									<th>不到棄權</th>
+									<th width="16%">不到棄權</th>
 									
-									<th>重覆使用圖片</th>
+									<th width="16%">重覆使用圖片</th>
 								</tr>
 							</thead>
 						</table>
@@ -221,12 +221,12 @@
 						<table class="table table-striped">
 							<tbody>
 								<tr>
-									<td>{{contestorScore.scoreMarking.rollCallMarking}}</td>
-									<td>{{contestorScore.scoreMarking.flashLightMarking}}</td>
-									<td>{{contestorScore.scoreMarking.phoneUsed}}</td>
-									<td>{{contestorScore.scoreMarking.audienceHelper}}</td>
-									<td>{{contestorScore.scoreMarking.absenceText}}</td>
-									<td>{{contestorScore.scoreMarking.samePictureUsed}}</td>
+									<td width="16%">{{contestorScore.scoreMarking.rollCallMarking}}</td>
+									<td width="16%">{{contestorScore.scoreMarking.flashLightMarking}}</td>
+									<td width="16%">{{contestorScore.scoreMarking.phoneUsed}}</td>
+									<td width="16%">{{contestorScore.scoreMarking.audienceHelper}}</td>
+									<td width="16%">{{contestorScore.scoreMarking.absenceText}}</td>
+									<td width="16%">{{contestorScore.scoreMarking.samePictureUsed}}</td>
 								</tr>
 							</tbody>
 						</table>
