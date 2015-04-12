@@ -396,7 +396,7 @@
 					reverse=!reverse">不到棄權</a></th>
 								<th><a href=""
 									ng-click="predicate = 'scoreMarking.samePictureUsed';
-					reverse=!reverse">重覆使用圖片</a></th-->
+					reverse=!reverse">未使用所有圖片</a></th-->
 						<!-- th>action</th-->
 						<!-- /tr>
 						</thead-->
@@ -420,7 +420,7 @@
 
 								<th>不到棄權</th>
 								<th
-									ng-if="selectedContestGroup.scoreRule.name.indexOf('看圖說故事') === 0">重覆使用圖片</th>
+									ng-if="selectedContestGroup.scoreRule.name.indexOf('看圖說故事') === 0">未使用所有圖片</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -799,7 +799,7 @@
 							type="checkbox" /> <label>棄權</label></td>
 					</tr>
 					<tr>
-						<td><label>重覆使用圖片:</label></td>
+						<td><label>未使用所有圖片:</label></td>
 						<td><input
 							ng-model="contestorToScore.scoreMarking.samePictureUsed"
 							ng-true-value="-10" ng-false-value="0"
