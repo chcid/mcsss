@@ -152,6 +152,7 @@ angular
 							};
 
 							var loadContestorsOnlyForTheAbstained = function() {
+								$scope.isUpdating = true;
 								dataFactory
 										.getContestorsForJudgeToScore(
 												$scope.selectedContestGroup.idcontest_group,
@@ -176,11 +177,19 @@ angular
 																								if (contestor.abstained != result.abstained) {
 																									contestor.abstained = result.abstained;
 																								}
+																								if (contestor.totalScore != result.totalScore) {
+																									contestor.totalScore = result.totalScore;
+																								}
+
+																								if (contestor.finalRank != result.finalRank) {
+																									contestor.finalRank = result.finalRank;
+																								}
 																							}
 																						});
 
 																	});
 													testToSeeIfCanBeSubmited();
+													$scope.isUpdating = false;
 												})
 										.error(
 												function(error) {
@@ -188,10 +197,11 @@ angular
 															+ "contestor for only the abstained"
 															+ ' data: '
 															+ error.message;
+													$scope.isUpdating = false;
 													console.log($scope.status);
 													$("#networkErrorModal")
 															.modal();
-													return false;
+													// return false;
 												});
 							};
 
@@ -277,10 +287,12 @@ angular
 																									// contestor.finalRank
 																									// =
 																									// result.finalRank;
-																									contestor.totalScore = result.totalScore;
 
 																									// console
 																									// .log(contestor);
+																								}
+																								if (contestor.totalScore != result.totalScore) {
+																									contestor.totalScore = result.totalScore;
 																								}
 
 																								if (contestor.finalRank != result.finalRank) {
@@ -307,7 +319,13 @@ angular
 															+ "Contestors for Judge to Score"
 															+ ' data: '
 															+ error.message;
+													// $scope.isUpdating =
+													// false;
+													$("#networkErrorModal")
+															.modal();
 													$scope.isUpdating = false;
+													return false;
+
 												});
 							};
 
@@ -324,6 +342,8 @@ angular
 															+ "select login staff list"
 															+ ' data: '
 															+ error.message;
+													$("#networkErrorModal")
+															.modal();
 												});
 							};
 							$scope.toUseStopwatch = function() {
@@ -391,7 +411,7 @@ angular
 							$scope.doScore = function(record) {
 								$scope.contestorToScore = {};
 								$scope.contestorToScore = angular.copy(record);
-								$scope.isScoring = true;
+								// $scope.isScoring = true;
 								if ($scope.contestorToScore.timeScore.minute == 0
 										&& $scope.contestorToScore.timeScore.second == 0) {
 									$scope.isUsingStopwatch = true;
@@ -402,7 +422,7 @@ angular
 							};
 
 							$scope.cancelScore = function() {
-								$scope.isScoring = false;
+								// $scope.isScoring = false;
 								$scope.speechStopwatch.stop();
 							};
 
@@ -431,13 +451,15 @@ angular
 															+ tableName
 															+ ': '
 															+ error.message;
-													$scope.isUpdating = false;
+													// $scope.isUpdating =
+													// false;
 													console.log($scope.status);
 													$("#networkErrorModal")
 															.modal();
+													$scope.isUpdating = false;
 													return false;
 												});
-								$scope.isScoring = false;
+								// $scope.isScoring = false;
 
 							};
 
