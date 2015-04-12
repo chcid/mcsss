@@ -188,6 +188,10 @@ angular
 															+ "contestor for only the abstained"
 															+ ' data: '
 															+ error.message;
+													console.log($scope.status);
+													$("#networkErrorModal")
+															.modal();
+													return false;
 												});
 							};
 
@@ -428,6 +432,10 @@ angular
 															+ ': '
 															+ error.message;
 													$scope.isUpdating = false;
+													console.log($scope.status);
+													$("#networkErrorModal")
+															.modal();
+													return false;
 												});
 								$scope.isScoring = false;
 

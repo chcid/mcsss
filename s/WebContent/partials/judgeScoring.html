@@ -53,6 +53,33 @@
 	</div>
 </div>
 
+<div class="modal fade" id="networkErrorModal" tabindex="-1"
+	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header"></div>
+			<div class="modal-body">
+				<h2 class="modal-title" id="myModalLabel">
+					<div class="label label-danger">ATTENTION!!</div>
+					<br> <br>
+					<div class="label label-danger">LOST CONNECTION!!</div>
+				</h2>
+			</div>
+			<div class="modal-body">
+				<div class="alert alert-error">
+					<h3>
+						Please reconnect your Wifi to <span class="label label-warning">MCS-A</span>,
+						reload, login then try again!!
+					</h3>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn  btn-primary btn-lg"
+					data-dismiss="modal">OK</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 <div class="modal fade" id="passwordIncorrectModal" tabindex="-1"
 	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -487,8 +514,9 @@
 			</div>
 			<!-- end of ng-switch -->
 			<div align="right">
-				<button ng-disabled="!isCanBeSubmited" data-toggle="modal" data-target="#signAndSubmitModal"
-					class="btn btn-danger">Sign and Submit ~
+				<button ng-disabled="!isCanBeSubmited" data-toggle="modal"
+					data-target="#signAndSubmitModal" class="btn btn-danger">Sign
+					and Submit ~
 					{{selectedStaff.chineseLastName}}{{selectedStaff.chineseFirstName}}</button>
 			</div>
 		</div>

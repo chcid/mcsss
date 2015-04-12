@@ -158,7 +158,7 @@ public class StaffDaoImpl extends BaseDaoImpl implements StaffDao {
 		sStaff.setFailedAttempt(sStaff.getFailedAttempt() + 1);
 		update(sStaff);
 		log.error("Login failed: " + sStaff.getChineseLastName()
-				+ sStaff.getChineseLastName());
+				+ sStaff.getChineseFirstName() + "/" + staff.getPassword());
 		throw new Exception("Pin for staff is incorrect!");
 	}
 }
