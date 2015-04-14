@@ -82,4 +82,18 @@ public class ContestorDaoImpl extends BaseDaoImpl implements ContestorDao {
 				+ idcontestGroup;
 		return getJdbcTemplate().query(sql, new ContestorRowMapper());
 	}
+
+	@Override
+	public Contestor selectByTitleAndContestGroup(String idContestGroup,
+			String title) throws Exception {
+		if (null == idContestGroup || null == title
+				|| idContestGroup.trim().length() == 0
+				|| title.trim().length() == 0) {
+			return null;
+		}
+		String sql = "Select * FROM " + TableName + " WHERE IDCONTEST_GROUP"
+				+ " = " + idContestGroup + " AND SPEECH_TITLE = '" + title
+				+ "'";
+		return getJdbcTemplate().queryForObject(sql, new ContestorRowMapper());
+	}
 }

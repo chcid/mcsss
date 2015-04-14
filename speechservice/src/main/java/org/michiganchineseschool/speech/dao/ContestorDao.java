@@ -3,6 +3,7 @@ package org.michiganchineseschool.speech.dao;
 import java.util.List;
 
 import org.michiganchineseschool.speech.model.Contestor;
+import org.michiganchineseschool.speech.model.ContestorIndividual;
 
 public interface ContestorDao {
 	public List<Contestor> selectAll() throws Exception;
@@ -17,5 +18,8 @@ public interface ContestorDao {
 
 	public List<Contestor> selectByContestGroup(String idcontestGroup)
 			throws Exception;
+
+	public Contestor selectByTitleAndContestGroup(String idContestGroup,
+			String title) throws Exception;
 
 }

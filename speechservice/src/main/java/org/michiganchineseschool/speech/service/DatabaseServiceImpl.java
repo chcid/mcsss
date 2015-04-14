@@ -1,11 +1,8 @@
 package org.michiganchineseschool.speech.service;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import oracle.net.aso.e;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -46,7 +43,6 @@ import org.michiganchineseschool.speech.model.Staff;
 import org.michiganchineseschool.speech.model.Student;
 import org.michiganchineseschool.speech.model.TimeLimitRule;
 import org.michiganchineseschool.speech.model.TimeScore;
-import org.michiganchineseschool.util.StringUtil;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.util.StringUtils;
@@ -965,6 +961,33 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 	}
 
+	private void reorderContestors(ContestGroup contestGroup, String[] lines)
+			throws Exception {
+		Contestor contestor = null;
+		int order = 0;
+		String line = null;
+		for (int i = 1; i < lines.length; i++) {
+			line = lines[i];
+			if (null == line || line.trim().length() == 0) {
+				continue;
+			}
+			try {
+				order++;
+				contestor = getContestorDao().selectByTitleAndContestGroup(
+						contestGroup.getIdcontest_group(), line.trim());
+				contestor.setContestOrder(order);
+				getContestorDao().update(contestor);
+			} catch (Exception e) {
+				log.error("Failed to retrieve Contestor by Title | contest group : "
+						+ line
+						+ " | "
+						+ contestGroup.getName()
+						+ " "
+						+ e.getLocalizedMessage());
+			}
+		}
+	}
+
 	private void addContestorsToContestGroup(ContestGroup record)
 			throws Exception {
 		if (StringUtils.isEmpty(record.getContestors())
@@ -972,10 +995,20 @@ public class DatabaseServiceImpl implements DatabaseService {
 			return;
 		}
 		String[] lines = record.getContestors().split("\\n");
-		if (isStoryTellingLines(lines)) {
-			doStoryTellingLines(record, lines);
+		if (null == lines || lines.length == 0) {
+			return;
+		}
+		if ("reorder".equals(lines[0].trim())) {
+			// reorder the contestors
+			reorderContestors(record, lines);
+
 		} else {
-			doRegularSpeechContestorLines(record, lines);
+			// add the new contestors
+			if (isStoryTellingLines(lines)) {
+				doStoryTellingLines(record, lines);
+			} else {
+				doRegularSpeechContestorLines(record, lines);
+			}
 		}
 	}
 
