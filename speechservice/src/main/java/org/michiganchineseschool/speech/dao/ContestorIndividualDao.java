@@ -15,4 +15,7 @@ public interface ContestorIndividualDao {
 
 	public ContestorIndividual select(String id) throws Exception;
 
+	public ContestorIndividual selectByIdcontestorAndIdstudent(
+			String idcontestor, String idstudent) throws Exception;
+
 }

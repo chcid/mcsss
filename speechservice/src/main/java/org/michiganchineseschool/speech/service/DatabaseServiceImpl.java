@@ -45,6 +45,7 @@ import org.michiganchineseschool.speech.model.TimeLimitRule;
 import org.michiganchineseschool.speech.model.TimeScore;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.util.StringUtils;
 
 public class DatabaseServiceImpl implements DatabaseService {
@@ -961,6 +962,38 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 	}
 
+	private Contestor getTheRightContestor(List<Contestor> list, String name)
+			throws Exception {
+		if (null != list && list.size() == 1) {
+			return list.get(0);
+		}
+		Student student = null;
+		try {
+			student = getStudentDao().selectByName(name);
+		} catch (Exception e) {
+			log.error("Cannot find the student: " + name);
+		}
+		ContestorIndividual ci = null;
+		for (Contestor contestor : list) {
+			try {
+				ci = getContestorIndividualDao()
+						.selectByIdcontestorAndIdstudent(
+								contestor.getIdcontestor(),
+								student.getIdstudent());
+				if (null == ci) {
+					continue;
+				}
+				return contestor;
+			} catch (Exception e) {
+				// ok here
+				continue;
+			}
+		}
+		throw new Exception("Cannot find the contestor with the stuent: "
+				+ name + " | contestor speech title: "
+				+ list.get(0).getSpeechTitle());
+	}
+
 	private void reorderContestors(ContestGroup contestGroup, String[] lines)
 			throws Exception {
 		Contestor contestor = null;
@@ -971,19 +1004,28 @@ public class DatabaseServiceImpl implements DatabaseService {
 			if (null == line || line.trim().length() == 0) {
 				continue;
 			}
+			String[] elements = line.split("\\t");
+			String title = line;
+			String name = line;
+			if (1 < elements.length) {
+				title = elements[1].trim();
+				name = elements[0].trim();
+			}
 			try {
 				order++;
-				contestor = getContestorDao().selectByTitleAndContestGroup(
-						contestGroup.getIdcontest_group(), line.trim());
+				List<Contestor> contestors = getContestorDao()
+						.selectByTitleAndContestGroup(
+								contestGroup.getIdcontest_group(), title);
+				if (null == contestors || contestors.size() == 0) {
+					throw new Exception(
+							"null or zero return from getContestorDao().selectByTitleAndContestGroup");
+				}
+				contestor = getTheRightContestor(contestors, name);
 				contestor.setContestOrder(order);
 				getContestorDao().update(contestor);
 			} catch (Exception e) {
 				log.error("Failed to retrieve Contestor by Title | contest group : "
-						+ line
-						+ " | "
-						+ contestGroup.getName()
-						+ " "
-						+ e.getLocalizedMessage());
+						+ title + " | " + contestGroup.getName() + " " + e);
 			}
 		}
 	}

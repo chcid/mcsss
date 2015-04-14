@@ -19,7 +19,7 @@ public interface ContestorDao {
 	public List<Contestor> selectByContestGroup(String idcontestGroup)
 			throws Exception;
 
-	public Contestor selectByTitleAndContestGroup(String idContestGroup,
+	public List<Contestor> selectByTitleAndContestGroup(String idContestGroup,
 			String title) throws Exception;
 
 }

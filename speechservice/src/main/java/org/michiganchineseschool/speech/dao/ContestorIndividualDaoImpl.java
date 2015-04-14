@@ -2,6 +2,7 @@ package org.michiganchineseschool.speech.dao;
 
 import java.util.List;
 
+import org.hamcrest.core.IsSame;
 import org.michiganchineseschool.speech.dao.mapper.ContestorIndividualRowMapper;
 import org.michiganchineseschool.speech.model.ContestorIndividual;
 
@@ -57,5 +58,20 @@ public class ContestorIndividualDaoImpl extends BaseDaoImpl implements
 				+ " = " + id;
 		return getJdbcTemplate().queryForObject(sql,
 				new ContestorIndividualRowMapper());
+	}
+
+	@Override
+	public ContestorIndividual selectByIdcontestorAndIdstudent(
+			String idcontestor, String idstudent) throws Exception {
+		if (null == idcontestor || null == idstudent
+				|| idcontestor.trim().length() == 0
+				|| idstudent.trim().length() == 0) {
+			throw new Exception("null/emptyl idcontestor or/and idstudent");
+		}
+		String sql = "Select * FROM " + TableName + " WHERE IDCONTESTOR = "
+				+ idcontestor + " AND IDSTUDENT = " + idstudent;
+		return getJdbcTemplate().queryForObject(sql,
+				new ContestorIndividualRowMapper());
+
 	}
 }
