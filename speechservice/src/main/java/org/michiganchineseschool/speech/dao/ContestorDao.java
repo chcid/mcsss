@@ -22,4 +22,7 @@ public interface ContestorDao {
 	public List<Contestor> selectByTitleAndContestGroup(String idContestGroup,
 			String title) throws Exception;
 
+	public Contestor selectByIdstudentAndContestGroupId(
+			String idcontestGroup, String idstudent) throws Exception;
+
 }

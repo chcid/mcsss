@@ -58,13 +58,25 @@
 						</tr>
 						<tr>
 							<td><label>Judges:</label></td>
-							<td><textarea type="text"  placeholder="Judges"
-								ng-model="recordToUpdate.judges" value="{{recordToUpdate.judges}}" rows="5" cols="70%"></textarea></td>
+							<td><textarea type="text" placeholder="Judges"
+									ng-model="recordToUpdate.judges"
+									value="{{recordToUpdate.judges}}" rows="5" cols="70%"></textarea></td>
 						</tr>
 						<tr>
 							<td><label>Contestors:</label></td>
-							<td><textarea type="text"  placeholder="Contestors"
-								ng-model="recordToUpdate.contestors" value="{{recordToUpdate.contestors}}" rows="15" cols="70%"></textarea></td>
+							<td><textarea type="text"
+									placeholder="For reorder:
+reorder
+student_name	speech_title
+student_name	speech_title
+student_name	speech_title
+
+For adding:
+student_name|student_english_name	speech_title
+student_name|student_english_name	speech_title
+student_name|student_english_name	speech_title"
+									ng-model="recordToUpdate.contestors"
+									value="{{recordToUpdate.contestors}}" rows="15" cols="70%"></textarea></td>
 						</tr>
 					</tbody>
 				</table>

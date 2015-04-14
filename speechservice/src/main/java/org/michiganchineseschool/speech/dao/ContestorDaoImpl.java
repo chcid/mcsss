@@ -96,4 +96,23 @@ public class ContestorDaoImpl extends BaseDaoImpl implements ContestorDao {
 				+ "'";
 		return getJdbcTemplate().query(sql, new ContestorRowMapper());
 	}
+
+	@Override
+	public Contestor selectByIdstudentAndContestGroupId(String idcontestGroup,
+			String idstudent) throws Exception {
+		if (null == idcontestGroup || null == idstudent
+				|| idcontestGroup.trim().length() == 0
+				|| idstudent.trim().length() == 0) {
+			return null;
+		}
+		String sql = "SELECT c.* FROM contest_group cg, contestor c, contestor_individual ci, student s "
+				+ "where c.idcontestor=ci.idcontestor "
+				+ "AND ci.idstudent=s.idstudent "
+				+ "AND cg.idcontest_group=c.idcontest_group "
+				+ "AND s.idstudent='"
+				+ idstudent
+				+ "' AND cg.idcontest_group="
+				+ idcontestGroup;
+		return getJdbcTemplate().queryForObject(sql, new ContestorRowMapper());
+	}
 }

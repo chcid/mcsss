@@ -931,6 +931,21 @@ public class DatabaseServiceImpl implements DatabaseService {
 		}
 	}
 
+	private Contestor getContestorByContestGroupAndStudentName(
+			String idcontestGroup, String studentName) throws Exception {
+		Student student = null;
+		try {
+			student = getStudentDao().selectByName(studentName);
+		} catch (Exception e) {
+			return null;
+		}
+		if (null == student) {
+			return null;
+		}
+		return getContestorDao().selectByIdstudentAndContestGroupId(
+				idcontestGroup, student.getIdstudent());
+	}
+
 	private void doRegularSpeechContestorLines(ContestGroup contestGroup,
 			String[] lines) throws Exception {
 		Contestor contestor = null;
@@ -942,6 +957,20 @@ public class DatabaseServiceImpl implements DatabaseService {
 			String[] elements = line.split("\\t");
 
 			if (null == elements || elements.length < 2) {
+				log.error("name or title are missing: " + line);
+				continue;
+			}
+			contestor = null;
+
+			try {
+				contestor = getContestorByContestGroupAndStudentName(
+						contestGroup.getIdcontest_group(), elements[0]);
+			} catch (Exception e) {
+				// ok here
+			}
+			if (null != contestor) {
+				log.error("Contestor exist already: " + contestGroup.getName()
+						+ "|" + elements[0] + "|" + elements[1]);
 				continue;
 			}
 			contestor = new Contestor();
@@ -962,36 +991,13 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 	}
 
-	private Contestor getTheRightContestor(List<Contestor> list, String name)
-			throws Exception {
+	private Contestor getTheRightContestor(List<Contestor> list,
+			String studentName, String idcontestGroup) throws Exception {
 		if (null != list && list.size() == 1) {
 			return list.get(0);
 		}
-		Student student = null;
-		try {
-			student = getStudentDao().selectByName(name);
-		} catch (Exception e) {
-			log.error("Cannot find the student: " + name);
-		}
-		ContestorIndividual ci = null;
-		for (Contestor contestor : list) {
-			try {
-				ci = getContestorIndividualDao()
-						.selectByIdcontestorAndIdstudent(
-								contestor.getIdcontestor(),
-								student.getIdstudent());
-				if (null == ci) {
-					continue;
-				}
-				return contestor;
-			} catch (Exception e) {
-				// ok here
-				continue;
-			}
-		}
-		throw new Exception("Cannot find the contestor with the stuent: "
-				+ name + " | contestor speech title: "
-				+ list.get(0).getSpeechTitle());
+		return getContestorByContestGroupAndStudentName(idcontestGroup,
+				studentName);
 	}
 
 	private void reorderContestors(ContestGroup contestGroup, String[] lines)
@@ -1020,7 +1026,14 @@ public class DatabaseServiceImpl implements DatabaseService {
 					throw new Exception(
 							"null or zero return from getContestorDao().selectByTitleAndContestGroup");
 				}
-				contestor = getTheRightContestor(contestors, name);
+				if (1 < contestors.size() && elements.length == 1) {
+					// no student to help to identify the right contestor
+					log.error("More than one contestors returned with the same speech title: "
+							+ title);
+					continue;
+				}
+				contestor = getTheRightContestor(contestors, name,
+						contestGroup.getIdcontest_group());
 				contestor.setContestOrder(order);
 				getContestorDao().update(contestor);
 			} catch (Exception e) {
