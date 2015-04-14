@@ -31,6 +31,16 @@ public class Contestor implements Serializable, Comparable<Contestor> {
 	private boolean isJudgeRanking = false;
 	private float scoreDiffBefore;
 	private float scoreDiffAfter;
+	
+	private boolean isWinner = false;
+
+	public boolean isWinner() {
+		return isWinner;
+	}
+
+	public void setWinner(boolean isWinner) {
+		this.isWinner = isWinner;
+	}
 
 	public float getScoreDiffBefore() {
 		return roundIt(scoreDiffBefore);

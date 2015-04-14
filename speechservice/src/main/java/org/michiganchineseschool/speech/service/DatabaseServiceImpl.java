@@ -1504,6 +1504,17 @@ public class DatabaseServiceImpl implements DatabaseService {
 			// contestor.getTotalTimeScore();
 		}
 		// take the abstained out for now
+		int totalCount = contestors.size();
+		int winCount = 0;
+		if (1 <= totalCount && 4 >= totalCount) {
+			winCount = 1;
+		} else if (5 <= totalCount && 8 >= totalCount) {
+			winCount = 2;
+		} else if (9 <= totalCount && 14 >= totalCount) {
+			winCount = 3;
+		} else if (15 <= totalCount) {
+			winCount = 4;
+		}
 		List<Contestor> absTaineds = new ArrayList<Contestor>();
 		for (Contestor contestor : contestors) {
 			if (contestor.isAbstained()) {
@@ -1519,6 +1530,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 		Contestor preContestor = null;
 
 		for (Contestor contestor : contestors) {
+			if (index + 1 <= winCount && 0 < contestor.getFinalScore()) {
+				contestor.setWinner(true);
+			}
 			if (index != 0) {
 				if (contestor.compareTo(preContestor) != 0) {
 					rank = index + 1;
