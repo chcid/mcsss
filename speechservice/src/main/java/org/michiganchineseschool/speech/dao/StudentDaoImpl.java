@@ -89,7 +89,7 @@ public class StudentDaoImpl extends BaseDaoImpl implements StudentDao {
 	public List<Student> selectByContestor(String idcontestor) throws Exception {
 		String sql = "select s.* from contestor_individual ci, student s"
 				+ " where ci.idstudent = s.idstudent"
-				+ " and ci.idcontestor = " + idcontestor;
+				+ " and ci.idcontestor = " + idcontestor + " order by ci.idcontestor_individual";
 		return getJdbcTemplate().query(sql, new StudentRowMapper());
 	}
 
