@@ -19,15 +19,19 @@
 							<td><label>比賽組別:</label></td>
 							<td><select class="form-control"
 								ng-model="recordToUpdate.contestGroup"
-								ng-options="(contestGroup.contest.name+'-'+contestGroup.name) group by contestGroup.contest.name for contestGroup in contestGroups">
+								ng-options="(contestGroup.contest.name+'-'+contestGroup.name) group by contestGroup.contest.name for contestGroup in contestGroups | filter:groupSelectFilterText">
 									<option value="">-- Please Select one --</option>
 							</select></td>
+						</tr><tr>
+							<td><label>人員 Filter:</label></td>
+							<td><input type="text" ng-model="staffSelectFilterText" /></td>
 						</tr>
+						
 						<tr>
 							<td><label>人員:</label></td>
 							<td><select class="form-control"
 								ng-model="recordToUpdate.staff"
-								ng-options="(staff.chineseLastName+''+staff.chineseFirstName+'-'+staff.englishLastName+', '+staff.englishFirstName ) for staff in staffs | orderBy:['chineseLastName','englishLastName']">
+								ng-options="(staff.chineseLastName+''+staff.chineseFirstName+'-'+staff.englishLastName+', '+staff.englishFirstName ) for staff in staffs | orderBy:['chineseLastName','englishLastName'] | filter:staffSelectFilterText">
 									<option value="">-- Please Select one --</option>
 							</select></td>
 						</tr>
