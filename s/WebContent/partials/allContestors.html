@@ -44,7 +44,8 @@
 </div>
 <div class="container">
 	Filter: <input ng-model="filterText" type="text"><br>
-	<table class="table table-striped" ng-init="predicate = 'contestGroup.name'">
+	<table class="table table-striped"
+		ng-init="predicate = 'contestGroup.name'">
 		<thead>
 			<tr>
 				<th><a href=""
@@ -53,6 +54,9 @@
 				<th><a href=""
 					ng-click="predicate = 'speechTitle';
 					reverse=!reverse">演講題目</a></th>
+				<th><a href=""
+					ng-click="predicate = 'students[0].chineseLastName';
+					reverse=!reverse">學生姓名</a></th>
 				<th><a href=""
 					ng-click="predicate = 'contestOrder';
 					reverse=!reverse">順序</a></th>
@@ -66,6 +70,8 @@
 				ng-repeat="record in records | filter:filterText | orderBy:predicate:reverse">
 				<td>{{record.contestGroup.contest.name}}-{{record.contestGroup.name}}</td>
 				<td>{{record.speechTitle}}</td>
+				<td><span ng-repeat="student in record.students">{{student.chineseLastName}}{{student.chineseFirstName}}-{{student.englishFirstName}}
+						{{student.englishLastName}},</span></td>
 				<td>{{record.contestOrder}}</td>
 				<td><a ng-click='doUpdate(record)' data-toggle="modal"
 					data-target="#updateInsertModal" class="btn btn-default btn-sm"

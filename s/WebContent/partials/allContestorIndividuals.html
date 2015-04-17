@@ -54,11 +54,17 @@
 		<thead>
 			<tr>
 				<th><a href=""
-					ng-click="predicate = 'contestor.contestOrder';
+					ng-click="predicate = 'contestor.contestGroup.name';
+					reverse=!reverse">比賽組別</a></th>
+				<th><a href=""
+					ng-click="predicate = 'contestor.speechTitle';
 					reverse=!reverse">演講題目</a></th>
 				<th><a href=""
-					ng-click="predicate = 'student.chineseFirstName';
+					ng-click="predicate = 'student.chineseLasttName';
 					reverse=!reverse">學生</a></th>
+				<th><a href=""
+					ng-click="predicate = 'contestor.contestOrder';
+					reverse=!reverse">順序</a></th>
 				<th>action <a class="btn btn-default btn-sm" href=""
 					ng-click='doCreate()' data-toggle="modal"
 					data-target="#updateInsertModal"> <i class="fa fa-plus fa-lg"></i></a></th>
@@ -67,9 +73,10 @@
 		<tbody>
 			<tr
 				ng-repeat="record in records | filter:filterText | orderBy:predicate:reverse">
-				<td>{{record.contestor.speechTitle}} -
-					{{record.contestor.contestGroup.name}} - 順序{{record.contestor.contestOrder}}</td>
+				<td>{{record.contestor.contestGroup.contest.name}}-{{record.contestor.contestGroup.name}}</td>
+				<td>{{record.contestor.speechTitle}}</td>
 				<td>{{record.student.chineseLastName}}{{record.student.chineseFirstName}}-{{record.student.englishLastName}},{{record.student.englishFirstName}}</td>
+				<td>{{record.contestor.contestOrder}}</td>
 				<td><a ng-click='doUpdate(record)' data-toggle="modal"
 					data-target="#updateInsertModal" class="btn btn-default btn-sm"
 					href=""> <i class="fa fa-pencil fa-lg"></i>

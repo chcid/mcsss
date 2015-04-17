@@ -1089,11 +1089,20 @@ public class DatabaseServiceImpl implements DatabaseService {
 		return contestor;
 	}
 
+	private void removeNoNeedItemsForContestGroup(ContestGroup contestGroup) {
+		contestGroup.setTimeLimitRule(null);
+		contestGroup.setScoreRule(null);
+		contestGroup.setScoreCountingType(null);
+		contestGroup.setContestLocation(null);
+	}
+
 	@Override
 	public List<Contestor> getAllContestors() throws Exception {
 		List<Contestor> contestors = getContestorDao().selectAll();
 		for (Contestor contestor : contestors) {
 			setContestGrooupForContestor(contestor);
+			setStudentsForContestors(contestors);
+			removeNoNeedItemsForContestGroup(contestor.getContestGroup());
 		}
 		return contestors;
 	}
@@ -1143,6 +1152,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 		for (ContestorIndividual contestorIndividual : contestorIndividuals) {
 			setContestorForContestorIndividual(contestorIndividual);
 			setStudentForContestorIndividual(contestorIndividual);
+			removeNoNeedItemsForContestGroup(contestorIndividual.getContestor()
+					.getContestGroup());
 		}
 		return contestorIndividuals;
 	}
