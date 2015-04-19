@@ -411,7 +411,7 @@ angular
 							$scope.doScore = function(record) {
 								$scope.contestorToScore = {};
 								$scope.contestorToScore = angular.copy(record);
-								// $scope.isScoring = true;
+								$scope.isScoring = true;
 								if ($scope.contestorToScore.timeScore.minute == 0
 										&& $scope.contestorToScore.timeScore.second == 0) {
 									$scope.isUsingStopwatch = true;
@@ -422,7 +422,7 @@ angular
 							};
 
 							$scope.cancelScore = function() {
-								// $scope.isScoring = false;
+								$scope.isScoring = false;
 								$scope.speechStopwatch.stop();
 							};
 
@@ -459,7 +459,7 @@ angular
 													$scope.isUpdating = false;
 													return false;
 												});
-								// $scope.isScoring = false;
+								$scope.isScoring = false;
 
 							};
 
