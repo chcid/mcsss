@@ -575,17 +575,17 @@
 									<tr>
 										<td colspan="2"><button ng-hide="isUsingStopwatch"
 												type="button" class="btn btn-warning btn-lg"
-												ng-click="toUseStopwatch()">使用碼表</button>
+												ng-click="toUseStopwatch()">Use Stopwatch</button>
 											<div ng-show="isUsingStopwatch">
 												<button
 													ng-disabled="speechStopwatch.data.intM!=0 || speechStopwatch.data.intS!=0"
 													ng-hide="speechStopwatch.data.isRunning" type="button"
 													class="btn btn-success btn-lg"
-													ng-click="speechStopwatch.start()">開始 -
+													ng-click="speechStopwatch.start()">Start -
 													{{speechStopwatch.data.m}}:{{speechStopwatch.data.s}}:{{speechStopwatch.data.ms}}</button>
 												<button ng-show="speechStopwatch.data.isRunning"
 													type="button" class="btn  btn-danger btn-lg"
-													ng-click="speechStopwatch.stop()">停 -
+													ng-click="speechStopwatch.stop()">Stop -
 													{{speechStopwatch.data.m}}:{{speechStopwatch.data.s}}:{{speechStopwatch.data.ms}}</button>
 
 											</div></td>
@@ -597,7 +597,7 @@
 													<button
 														ng-hide="speechStopwatch.data.isRunning || (speechStopwatch.data.intM == 0 && speechStopwatch.data.intS == 0)"
 														type="button" class="btn  btn-danger btn-lg"
-														data-dismiss="modal" ng-click="speechStopwatch.reset()">歸零</button>
+														data-dismiss="modal" ng-click="speechStopwatch.reset()">Reset</button>
 												</div>
 											</div></td>
 										<td align="right"><div ng-show="isUsingStopwatch">
@@ -645,12 +645,12 @@
 										<!-- input size="2" type="text"
 						ng-model="contestorToScore.timeScore.minute"
 						value="{{contestorToScore.timeScore.minute}}"--> <select
-										style="width: 65px;" class="form-control"
+										style="width: 72px;" class="form-control"
 										ng-model="contestorToScore.timeScore.minute"
 										ng-options="value as value for value in minuteRanges">
 									</select>
 									</td>
-									<td>分</td>
+									<td>Minute</td>
 								</tr>
 								<tr>
 									<td>
@@ -658,12 +658,12 @@
 						ng-model="contestorToScore.timeScore.second"
 						value="
 						{{contestorToScore.timeScore.second}}"--> <select
-										style="width: 65px;" class="form-control"
+										style="width: 72px;" class="form-control"
 										ng-model="contestorToScore.timeScore.second"
 										ng-options="value as value for value in secondRanges">
 									</select>
 									</td>
-									<td>秒</td>
+									<td>Second</td>
 								</tr>
 							</table>
 						</td>
