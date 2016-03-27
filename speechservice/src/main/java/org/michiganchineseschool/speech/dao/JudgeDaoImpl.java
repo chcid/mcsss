@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.michiganchineseschool.speech.dao.mapper.JudgeRowMapper;
 import org.michiganchineseschool.speech.model.Judge;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 public class JudgeDaoImpl extends BaseDaoImpl implements JudgeDao {
 	private final static String TableName = "judge";
@@ -51,6 +52,19 @@ public class JudgeDaoImpl extends BaseDaoImpl implements JudgeDao {
 	public List<Judge> selectAll() throws Exception {
 		String sql = "SELECT * FROM " + TableName;
 		return getJdbcTemplate().query(sql, new JudgeRowMapper());
+	}
+
+	@Override
+	public Judge selectJudgeByIdContestGroupAndIdRole(String idContestGroup,
+			String idRole) throws Exception {
+		String sql = "SELECT * FROM " + TableName
+				+ " WHERE IDCONTEST_GROUP = \"" + idContestGroup
+				+ "\" AND IDROLE = \"" + idRole + "\"";
+		try {
+			return getJdbcTemplate().queryForObject(sql, new JudgeRowMapper());
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 	}
 
 	@Override

@@ -15,4 +15,7 @@ public interface JudgeDao {
 
 	public Judge select(String id) throws Exception;
 
+	public Judge selectJudgeByIdContestGroupAndIdRole(String idContestGroup, String idRole)
+			throws Exception;
+
 }

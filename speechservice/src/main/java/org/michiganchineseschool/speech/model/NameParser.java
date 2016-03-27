@@ -1,8 +1,10 @@
 package org.michiganchineseschool.speech.model;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.michiganchineseschool.util.StringUtil;
 import org.springframework.util.StringUtils;
 
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class NameParser {
 	private String chineseFirstname;
 	private String chineseLastname;
@@ -82,7 +84,7 @@ public class NameParser {
 		if (name.length() >= 2 && name.length() < 4) {
 			index = 1;
 		} else {
-			//name length >= 4
+			// name length >= 4
 			index = 2;
 		}
 		setChineseLastname(name.substring(0, index));

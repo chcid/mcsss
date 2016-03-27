@@ -11,6 +11,7 @@ import org.michiganchineseschool.speech.model.GradYear;
 import org.michiganchineseschool.speech.model.Judge;
 import org.michiganchineseschool.speech.model.Role;
 import org.michiganchineseschool.speech.model.ScoreCountingType;
+import org.michiganchineseschool.speech.model.ScoreMarking;
 import org.michiganchineseschool.speech.model.ScoreRule;
 import org.michiganchineseschool.speech.model.ScoreRuleItem;
 import org.michiganchineseschool.speech.model.SpeechScore;
@@ -165,6 +166,8 @@ public interface DatabaseService {
 			String idstaff, String idrole) throws Exception;
 
 	public void updateSpeechScore(SpeechScore speechScore) throws Exception;
+	
+	public void updateScoreMarking(ScoreMarking scoreMarking) throws Exception;
 
 	public void updateSpeechScoreByContestor(Contestor contestor)
 			throws Exception;

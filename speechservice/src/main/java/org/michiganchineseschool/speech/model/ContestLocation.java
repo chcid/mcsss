@@ -2,6 +2,9 @@ package org.michiganchineseschool.speech.model;
 
 import java.io.Serializable;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class ContestLocation implements Serializable {
 	static final long serialVersionUID = 1l;
 	private String idcontest_location;

@@ -90,7 +90,7 @@
 					</th>
 
 					<th
-						ng-repeat="contestorScore in contestors[0].contestorScores | getOnlyRoleFilter:'[4]' | orderBy: 'judge.idjudge'">
+						ng-repeat="contestorScore in contestors[0].contestorScores | getOnlyRoleFilter:'[3,4]' | orderBy: 'judge.role.idrole' | limitTo: 1">
 						{{contestorScore.judge.staff.chineseLastName}}{{contestorScore.judge.staff.chineseFirstName}}-{{contestorScore.judge.role.name}}<br>
 						<table border="1">
 							<thead>
@@ -220,7 +220,7 @@
 					</td>
 					<td
 						ng-class="{success: contestorScore.judge.submit, danger: !contestorScore.judge.submit}"
-						ng-repeat="contestorScore in record.contestorScores | getOnlyRoleFilter:'[4]' | orderBy:'judge.idjudge'">
+						ng-repeat="contestorScore in record.contestorScores | getOnlyRoleFilter:'[3,4]' | orderBy:'judge.role.idrole' | limitTo: 1">
 						<table class="table table-striped">
 							<tbody>
 								<tr>

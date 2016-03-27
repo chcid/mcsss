@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Contestor implements Serializable, Comparable<Contestor> {
 	static final long serialVersionUID = 1l;
 	private String idcontestor;
@@ -31,8 +34,18 @@ public class Contestor implements Serializable, Comparable<Contestor> {
 	private boolean isJudgeRanking = false;
 	private float scoreDiffBefore;
 	private float scoreDiffAfter;
-	
+
 	private boolean isWinner = false;
+
+	private boolean isPenaltyChiefExist = false;
+
+	public boolean isPenaltyChiefExist() {
+		return isPenaltyChiefExist;
+	}
+
+	public void setPenaltyChiefExist(boolean isPenaltyChiefExist) {
+		this.isPenaltyChiefExist = isPenaltyChiefExist;
+	}
 
 	public boolean isWinner() {
 		return isWinner;
@@ -202,7 +215,9 @@ public class Contestor implements Serializable, Comparable<Contestor> {
 		}
 		for (ContestorScore contestorScore : contestorScores) {
 			try {
-				if ("4".equals(contestorScore.getJudge().getRole().getIdrole())) {
+				if ("4".equals(contestorScore.getJudge().getRole().getIdrole())
+						|| "3".equals(contestorScore.getJudge().getRole()
+								.getIdrole())) {
 					totalScoreMarking += contestorScore.getScoreMarkingTotal();
 					setAbstained(contestorScore.isAbstained());
 				}
@@ -264,6 +279,8 @@ public class Contestor implements Serializable, Comparable<Contestor> {
 			try {
 				if ("1".equals(contestorScore.getJudge().getRole().getIdrole())
 						|| "4".equals(contestorScore.getJudge().getRole()
+								.getIdrole())
+						|| "3".equals(contestorScore.getJudge().getRole()
 								.getIdrole())) {
 					if (0 < contestorScore.getSpeechScoreTotal()) {
 						totalSpeechScore += contestorScore
@@ -347,6 +364,8 @@ public class Contestor implements Serializable, Comparable<Contestor> {
 			try {
 				if ("1".equals(contestorScore.getJudge().getRole().getIdrole())
 						|| "4".equals(contestorScore.getJudge().getRole()
+								.getIdrole())
+						|| "3".equals(contestorScore.getJudge().getRole()
 								.getIdrole())) {
 					for (SpeechScore speechScore : contestorScore
 							.getSpeechScores()) {

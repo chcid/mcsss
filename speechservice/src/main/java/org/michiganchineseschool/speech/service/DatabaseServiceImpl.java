@@ -1258,7 +1258,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 				// Duplicated Key is fine here
 			}
 		}
-		if ("1".equals(idrole) || "4".equals(idrole)) {
+		if ("1".equals(idrole) || "4".equals(idrole) || "3".equals(idrole)) {
 			// Judge
 			// TODO
 			// need to improve the hard coded role id
@@ -1283,7 +1283,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 				}
 			}
 		}
-		if ("2".equals(idrole) || "4".equals(idrole)) {
+		if ("2".equals(idrole) || "4".equals(idrole) || "3".equals(idrole)) {
 			// Timer
 			// We need to insert empty record to TimeScore and ScoreMarking
 			for (ContestorScore contestorScore : contestorScores) {
@@ -1315,13 +1315,13 @@ public class DatabaseServiceImpl implements DatabaseService {
 		List<Contestor> contestors = getContestorDao().selectByContestGroup(
 				idcontestGroup);
 		setStudentsForContestors(contestors);
-		if ("1".equals(idrole) || "4".equals(idrole)) {
+		if ("1".equals(idrole) || "4".equals(idrole) || "3".equals(idrole)) {
 			setScoreRuleItemsForContestor(contestors, idstaff, idrole);
 		}
-		if ("2".equals(idrole) || "4".equals(idrole)) {
+		if ("2".equals(idrole) || "4".equals(idrole) || "3".equals(idrole)) {
 			setScoreMarkingAndTimeScoreForContestor(contestors, idstaff, idrole);
 		}
-		if ("1".equals(idrole) || "4".equals(idrole)) {
+		if ("1".equals(idrole) || "4".equals(idrole) || "3".equals(idrole)) {
 			// sort the judg ranking for Judge's scoring reference
 			sortRankingForJudgeScoringReference(contestors);
 		}
@@ -1388,6 +1388,28 @@ public class DatabaseServiceImpl implements DatabaseService {
 			throws Exception {
 		for (Contestor contestor : contestors) {
 			if ("4".equals(idrole)) {
+				// if this is Chief Judge
+				// We want to check to see if this group has a penalty Chief
+				// If yes, we want to use penalty Chief's score
+				Judge judge = getJudgeDao()
+						.selectJudgeByIdContestGroupAndIdRole(
+								contestor.getContestGroup()
+										.getIdcontest_group(), "3");
+				if (null != judge) {
+					contestor.setScoreMarking(getScoreMarkingDao()
+							.selectByContestorStaffRole(
+									contestor.getIdcontestor(),
+									judge.getRole().getIdrole(),
+									judge.getStaff().getIdstaff()));
+					contestor.setPenaltyChiefExist(true);
+				} else {
+					contestor
+							.setScoreMarking(getScoreMarkingDao()
+									.selectByContestorStaffRole(
+											contestor.getIdcontestor(), idrole,
+											idstaff));
+				}
+			} else if ("3".equals(idrole)) {
 				contestor.setScoreMarking(getScoreMarkingDao()
 						.selectByContestorStaffRole(contestor.getIdcontestor(),
 								idrole, idstaff));
@@ -1445,12 +1467,21 @@ public class DatabaseServiceImpl implements DatabaseService {
 	}
 
 	@Override
+	public void updateScoreMarking(ScoreMarking record) throws Exception {
+		if (null != record) {
+			getScoreMarkingDao().update(record);
+		}
+	}
+
+	@Override
 	public void updateSpeechScoreByContestor(Contestor contestor)
 			throws Exception {
 		if (null != contestor.getScoreRuleItems()
 				&& contestor.getScoreRuleItems().size() > 0) {
 			for (ScoreRuleItem scoreRuleItem : contestor.getScoreRuleItems()) {
-				updateSpeechScore(scoreRuleItem.getSpeechScore());
+				if (null != scoreRuleItem.getSpeechScore()) {
+					updateSpeechScore(scoreRuleItem.getSpeechScore());
+				}
 			}
 		}
 		if (null != contestor.getTimeScore()) {
@@ -1507,6 +1538,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 		for (ContestorScore contestorScore : contestor.getContestorScores()) {
 			if ("1".equals(contestorScore.getJudge().getRole().getIdrole())
 					|| "4".equals(contestorScore.getJudge().getRole()
+							.getIdrole())
+					|| "3".equals(contestorScore.getJudge().getRole()
 							.getIdrole())) {
 				// sort judg rank for ths contestor
 				setJudgeRankForContestor(
@@ -1647,7 +1680,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 			// timer judge
 			setupTimeScoreForContestorScore(contestorScore);
 			// setupScoreMarkingForContestorScore(contestorScore);
-		} else if ("4".equals(contestorScore.getJudge().getRole().getIdrole())) {
+		} else if ("4".equals(contestorScore.getJudge().getRole().getIdrole())
+				|| "3".equals(contestorScore.getJudge().getRole().getIdrole())) {
 			// Chief Judge
 			setupSpeechScoresForContestorScore(contestorScore);
 			setupScoreMarkingForContestorScore(contestorScore);
@@ -1656,9 +1690,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 	private void setupScoreMarkingForContestorScore(
 			ContestorScore contestorScore) throws Exception {
+		String idContestScore = contestorScore.getIdcontestor_score();
 		contestorScore.setScoreMarking(getScoreMarkingDao()
-				.selectByContestorScore(contestorScore.getIdcontestor_score()));
-
+				.selectByContestorScore(idContestScore));
 	}
 
 	private void setupTimeScoreForContestorScore(ContestorScore contestorScore)

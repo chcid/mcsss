@@ -94,4 +94,16 @@ public class ContestorScoreDaoImpl extends BaseDaoImpl implements
 				+ idcontestor;
 		return getJdbcTemplate().query(sql, new ContestorScoreRowMapper());
 	}
+
+	@Override
+	public ContestorScore selectByContestorAndIdJudge(String idcontestor,
+			String idJudge) throws Exception {
+		if (null == idcontestor) {
+			return null;
+		}
+		String sql = "SELECT * FROM " + TableName + " WHERE IDCONTESTOR = "
+				+ idcontestor + " AND IDJUDGE = \"" + idJudge + "\"";
+		return getJdbcTemplate().queryForObject(sql,
+				new ContestorScoreRowMapper());
+	}
 }

@@ -82,7 +82,7 @@ angular
 							$scope.abstainedUpdater = null;
 							var startAbstainedUpdater = function() {
 								$scope.abstainedUpdater = $timeout(function() {
-									if (!$scope.isUpdating) {
+									if (!$scope.isUpdating && !$scope.isDropdownFocused) {
 										loadContestorsOnlyForTheAbstained();
 									}
 									startAbstainedUpdater();
@@ -180,9 +180,11 @@ angular
 																								if (contestor.totalScore != result.totalScore) {
 																									contestor.totalScore = result.totalScore;
 																								}
-
 																								if (contestor.finalRank != result.finalRank) {
 																									contestor.finalRank = result.finalRank;
+																								}
+																								if (result.scoreMarking){
+																									contestor.scoreMarking = result.scoreMarking;
 																								}
 																							}
 																						});
@@ -219,7 +221,9 @@ angular
 												$scope.contestorsForJudgeToScore,
 												function(contestor) {
 													if (!contestor.abstained) {
-														if (2 == $scope.selectedContestGroup.role.idrole) {
+														if (3 == $scope.selectedContestGroup.role.idrole) {
+															isCan = true;
+														} else if (2 == $scope.selectedContestGroup.role.idrole) {
 															// timer
 															if (0 == contestor.timeScore.minute
 																	&& 0 == contestor.timeScore.second) {
@@ -425,9 +429,94 @@ angular
 								$scope.isScoring = false;
 								$scope.speechStopwatch.stop();
 							};
+							
+							$scope.setDropdownFocused = function(){
+								$scope.isDropdownFocused = true;
+							};
+							
+							$scope.setDropdownBlur = function(){
+								$scope.isDropdownFocused = false;
+							};
+							
+							$scope.submitScoreMarking = function(record, scoreMarking) {
+								$scope.isUpdating = true;
+								$scope.isDropdownFocused = false;
+								//$scope.justUpdatedId = id;
+								$scope.justUpdatedIdContestor = record.idcontestor;
+								console.log(scoreMarking);
+								$scope.speechStopwatch.stop();
+								var tableName = "speech_score/score_marking";
+								dataFactory
+										.updateRecord(scoreMarking, tableName)
+										.success(
+												function() {
+													$scope.status = 'Updated '
+															+ +'! Refreshing '
+															+ tableName
+															+ ' list.';
+													loadContestors();
+													// $scope.isUpdating =
+													// false;
+												})
+										.error(
+												function(error) {
+													$scope.status = 'Unable to update '
+															+ tableName
+															+ ': '
+															+ error.message;
+													// $scope.isUpdating =
+													// false;
+													console.log($scope.status);
+													$("#networkErrorModal")
+															.modal();
+													$scope.isUpdating = false;
+													return false;
+												});
+								$scope.isScoring = false;
+
+							};
+							
+							$scope.submitOneScore = function(record, speechScore, id) {
+								$scope.isUpdating = true;
+								$scope.isDropdownFocused = false;
+								$scope.justUpdatedId = id;
+								$scope.justUpdatedIdContestor = record.idcontestor;
+								console.log(speechScore);
+								$scope.speechStopwatch.stop();
+								var tableName = "speech_score/one_record";
+								dataFactory
+										.updateRecord(speechScore, tableName)
+										.success(
+												function() {
+													$scope.status = 'Updated '
+															+ +'! Refreshing '
+															+ tableName
+															+ ' list.';
+													loadContestors();
+													// $scope.isUpdating =
+													// false;
+												})
+										.error(
+												function(error) {
+													$scope.status = 'Unable to update '
+															+ tableName
+															+ ': '
+															+ error.message;
+													// $scope.isUpdating =
+													// false;
+													console.log($scope.status);
+													$("#networkErrorModal")
+															.modal();
+													$scope.isUpdating = false;
+													return false;
+												});
+								$scope.isScoring = false;
+
+							};
 
 							$scope.submitScore = function(record, id) {
 								$scope.isUpdating = true;
+								$scope.isDropdownFocused = false;
 								$scope.justUpdatedId = id;
 								$scope.justUpdatedIdContestor = record.idcontestor;
 								console.log(record);

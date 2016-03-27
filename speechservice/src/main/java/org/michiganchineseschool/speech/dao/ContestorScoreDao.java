@@ -24,5 +24,8 @@ public interface ContestorScoreDao {
 
 	public List<ContestorScore> selectByContestor(String idcontestor)
 			throws Exception;
+	
+	public ContestorScore selectByContestorAndIdJudge(String idcontestor, String idJudge)
+			throws Exception;
 
 }

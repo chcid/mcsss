@@ -2,6 +2,9 @@ package org.michiganchineseschool.speech.model;
 
 import java.io.Serializable;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class ContestGroup implements Serializable {
 	static final long serialVersionUID = 1l;
 	private String idcontest_group;
@@ -15,7 +18,6 @@ public class ContestGroup implements Serializable {
 	private Judge judge;
 	private String judges;
 	private String contestors;
-	
 
 	public String getContestors() {
 		return contestors;

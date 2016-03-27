@@ -2,6 +2,9 @@ package org.michiganchineseschool.speech.model;
 
 import java.io.Serializable;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class ScoreMarking implements Serializable {
 	static final long serialVersionUID = 1l;
 	private String idscore_marking;
@@ -12,7 +15,7 @@ public class ScoreMarking implements Serializable {
 	private int absence;
 	private int phoneUsed;
 	private int samePictureUsed;
-	
+
 	public String getSamePictureUsed() {
 		return String.valueOf(samePictureUsed);
 	}
