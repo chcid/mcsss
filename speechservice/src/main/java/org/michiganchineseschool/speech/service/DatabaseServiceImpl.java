@@ -856,7 +856,13 @@ public class DatabaseServiceImpl implements DatabaseService {
 			idrole = "1";
 			if (len > 1) {
 				if (index == 0) {
-					idrole = "4";// chief
+					String j[] = judge.split(";");
+					if (1 < j.length) {
+						// add penalty chief --> 3
+						addJudgeToContestGroupByName(contestGroup, j[1], "3");
+						judge = j[0];
+					}
+					idrole = "4";// judge chief
 				} else if (index == len - 1) {
 					idrole = "2";// timer
 				}
@@ -1531,6 +1537,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 	private void setJudgeRankForContestors(List<Contestor> contestors)
 			throws Exception {
+		if (0 <= contestors.size()) {
+			return;
+		}
 		Contestor contestor = contestors.get(0);
 		if (null == contestor || null == contestor.getContestorScores()) {
 			return;
@@ -1538,8 +1547,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 		for (ContestorScore contestorScore : contestor.getContestorScores()) {
 			if ("1".equals(contestorScore.getJudge().getRole().getIdrole())
 					|| "4".equals(contestorScore.getJudge().getRole()
-							.getIdrole())
-					|| "3".equals(contestorScore.getJudge().getRole()
 							.getIdrole())) {
 				// sort judg rank for ths contestor
 				setJudgeRankForContestor(
