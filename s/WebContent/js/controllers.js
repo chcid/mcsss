@@ -280,6 +280,7 @@ angular
 																									}
 																									if (result.timeScore) {
 																										contestor.timeScore = result.timeScore;
+																										contestor.judgeTimeScore = result.judgeTimeScore;
 																									}
 
 																									if (result.judgeTimeScore) {
