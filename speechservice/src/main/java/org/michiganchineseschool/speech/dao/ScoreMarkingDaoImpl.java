@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.michiganchineseschool.speech.dao.mapper.ScoreMarkingRowMapper;
 import org.michiganchineseschool.speech.model.ScoreMarking;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 public class ScoreMarkingDaoImpl extends BaseDaoImpl implements ScoreMarkingDao {
 	private final static String TableName = "score_marking";
@@ -77,8 +78,12 @@ public class ScoreMarkingDaoImpl extends BaseDaoImpl implements ScoreMarkingDao 
 				+ " and s.idstaff = "
 				+ idstaff
 				+ " and c.idcontestor = " + idcontestor;
-		return getJdbcTemplate().queryForObject(sql,
-				new ScoreMarkingRowMapper());
+		try {
+			return getJdbcTemplate().queryForObject(sql,
+					new ScoreMarkingRowMapper());
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 	}
 
 	@Override

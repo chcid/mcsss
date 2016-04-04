@@ -30,6 +30,10 @@ public class ContestorController extends BaseController {
 			List<Contestor> contestors) throws Exception {
 		for (Contestor contestor : contestors) {
 			contestor.getTotalScoreMarking();
+			if (null != contestor.getScoreMarking()) {
+				contestor.setAbstained("-1".equals(contestor.getScoreMarking()
+						.getAbsence()));
+			}
 		}
 		return contestors;
 	}

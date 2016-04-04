@@ -1537,7 +1537,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 
 	private void setJudgeRankForContestors(List<Contestor> contestors)
 			throws Exception {
-		if (0 <= contestors.size()) {
+		if (0 == contestors.size()) {
 			return;
 		}
 		Contestor contestor = contestors.get(0);
@@ -1665,14 +1665,20 @@ public class DatabaseServiceImpl implements DatabaseService {
 			throws Exception {
 		List<ContestorScore> contestorScores = getContestorScoreDao()
 				.selectByContestor(contestor.getIdcontestor());
-		setScoresBasedOnJudgeRoleForContestorScores(contestorScores);
+		setScoresBasedOnJudgeRoleForContestorScores(contestor, contestorScores);
 		contestor.setContestorScores(contestorScores);
 	}
 
 	private void setScoresBasedOnJudgeRoleForContestorScores(
-			List<ContestorScore> contestorScores) throws Exception {
+			Contestor contestor, List<ContestorScore> contestorScores)
+			throws Exception {
 		for (ContestorScore contestorScore : contestorScores) {
 			setScoresBasedOnJudgeRoleForContestorScore(contestorScore);
+			if (null != contestorScore.getScoreMarking()) {
+				if ("-1".equals(contestorScore.getScoreMarking().getAbsence())) {
+					contestor.setAbstained(true);
+				}
+			}
 		}
 	}
 
@@ -1687,11 +1693,15 @@ public class DatabaseServiceImpl implements DatabaseService {
 			// timer judge
 			setupTimeScoreForContestorScore(contestorScore);
 			// setupScoreMarkingForContestorScore(contestorScore);
-		} else if ("4".equals(contestorScore.getJudge().getRole().getIdrole())
-				|| "3".equals(contestorScore.getJudge().getRole().getIdrole())) {
+		} else if ("3".equals(contestorScore.getJudge().getRole().getIdrole())) {
+			// Penalty Chief
+			setupScoreMarkingForContestorScore(contestorScore);
+		} else if ("4".equals(contestorScore.getJudge().getRole().getIdrole())) {
 			// Chief Judge
 			setupSpeechScoresForContestorScore(contestorScore);
-			setupScoreMarkingForContestorScore(contestorScore);
+			if (!contestorScore.getContestor().isPenaltyChiefExist()) {
+				setupScoreMarkingForContestorScore(contestorScore);
+			}
 		}
 	}
 

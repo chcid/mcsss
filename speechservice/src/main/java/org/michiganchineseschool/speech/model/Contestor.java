@@ -219,7 +219,7 @@ public class Contestor implements Serializable, Comparable<Contestor> {
 						|| "3".equals(contestorScore.getJudge().getRole()
 								.getIdrole())) {
 					totalScoreMarking += contestorScore.getScoreMarkingTotal();
-					setAbstained(contestorScore.isAbstained());
+					//setAbstained(contestorScore.isAbstained());
 				}
 			} catch (NullPointerException e) {
 				// null pointer is ok here

@@ -80,9 +80,12 @@ public class SpeechScoreDaoImpl extends BaseDaoImpl implements SpeechScoreDao {
 				+ idcontestor
 				+ " and sri.idscore_rule_item = "
 				+ idscoreRuleItem;
-
-		return getJdbcTemplate()
-				.queryForObject(sql, new SpeechScoreRowMapper());
+		try {
+			return getJdbcTemplate().queryForObject(sql,
+					new SpeechScoreRowMapper());
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 	}
 
 	@Override
