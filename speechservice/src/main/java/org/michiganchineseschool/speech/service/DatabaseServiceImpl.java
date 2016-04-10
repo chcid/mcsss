@@ -1611,16 +1611,24 @@ public class DatabaseServiceImpl implements DatabaseService {
 		}
 		// take the abstained out for now
 		int totalCount = contestors.size();
-		int winCount = 0;
-		if (1 <= totalCount && 4 >= totalCount) {
+		int winCount = (int)Math.ceil(totalCount / 4.0 );
+		/*if (1 <= totalCount && 4 >= totalCount) {
 			winCount = 1;
 		} else if (5 <= totalCount && 8 >= totalCount) {
 			winCount = 2;
-		} else if (9 <= totalCount && 14 >= totalCount) {
+		} else if (9 <= totalCount && 12 >= totalCount) {
 			winCount = 3;
-		} else if (15 <= totalCount) {
+		} else if (13 <= totalCount && 16 >= totalCount) {
 			winCount = 4;
-		}
+		} else if (17 <= totalCount && 20 >= totalCount) {
+			winCount = 5;
+		} else if (21 <= totalCount && 24 >= totalCount) {
+			winCount = 6;
+		} else if (25 <= totalCount && 28 >= totalCount) {
+			winCount = 7;
+		} else {
+			winCount = 8;
+		}*/
 		List<Contestor> absTaineds = new ArrayList<Contestor>();
 		for (Contestor contestor : contestors) {
 			if (contestor.isAbstained()) {
