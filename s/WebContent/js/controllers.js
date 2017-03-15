@@ -11,15 +11,22 @@ angular
 						'dataFactory',
 						'$routeParams',
 						'$timeout',
-						function($scope, dataFactory, $routeParams, $timeout) {
+						'$location',
+						function($scope, dataFactory, $routeParams, $timeout, $location) {
 							// var scoreMonitor = null;
 							$scope.scoreMonitor = null;
+							
 							var startMonitor = function() {
 								$scope.scoreMonitor = $timeout(function() {
 									selectedContestGroupChanged();
 									startMonitor();
 								}, 5000);
 							};
+							var getShowJudge = function() {
+								$scope.showJudge = $location.search()['showJudge'];
+								//alert($scope.showJudge);
+							};
+							getShowJudge();
 							$scope.startMonitor = function() {
 								startMonitor();
 							};
