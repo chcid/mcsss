@@ -68,10 +68,11 @@ public class NameParser {
 		setEnglishLastname(eNames[0].trim());
 		if (eNames.length > 1) {
 			setEnglishLastname(eNames[eNames.length - 1].trim());
-			if (eNames.length > 2) {
-				setEnglishFirstname(name.substring(0, name.length()
-						- getEnglishLastname().length()));
-			}
+			setEnglishFirstname(name.substring(0, name.indexOf(getEnglishLastname())));
+			//if (eNames.length > 2) {
+			//	setEnglishFirstname(name.substring(0, name.length()
+			//			- getEnglishLastname().length()));
+			//}
 		}
 	}
 
