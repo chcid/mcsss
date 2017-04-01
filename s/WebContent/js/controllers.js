@@ -86,6 +86,7 @@ angular
 								$timeout) {
 
 							$scope.isCanBeSubmited = false;
+							$scope.alertTimeThreshold = 30;//secods
 
 							$scope.abstainedUpdater = null;
 							var startAbstainedUpdater = function() {
@@ -131,12 +132,12 @@ angular
 							$scope.speechStopwatch = stopwatch;
 
 							$scope.startStopwatch = function() {
-								if ($scope.selectedContestGroup.scoreRule.name
+								if ($scope.selectedContestGroup.name
 										.indexOf('看圖說故事') === 0) {
 									$scope.speechStopwatch
 											.start(
 													$scope.selectedContestGroup.timeLimitRule.maxLimit,
-													30);
+													$scope.alertTimeThreshold);
 								} else {
 									$scope.speechStopwatch.start();
 								}

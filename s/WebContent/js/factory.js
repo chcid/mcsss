@@ -48,6 +48,7 @@ angular.module('speechApp').factory('dataFactory', [ '$http', function($http) {
 } ]).constant('SW_DELAI', 100)
 .factory('stopwatch', function (SW_DELAI,$timeout) {
     var data = { 
+    		approach: 0,
     		isAlertRaised: false,
     		alertThreshold: 0,
     		alertTime: 0,    		
@@ -102,9 +103,10 @@ angular.module('speechApp').factory('dataFactory', [ '$http', function($http) {
     	data.intS = Math.floor( time / divid );
     	data.s = pad(data.intS,2);
     	data.ms = Math.floor(time % divid);
+    	data.approach = (data.value/divid) + data.alertThreshold;
     	if ( 0 != data.alertTime )
     	{
-    		if ( (time/divid) + data.alertThreshold >= data.alertTime)
+    		if ( data.approach >= data.alertTime)
     		{
     			data.isAlertRaised = true;
     		}
