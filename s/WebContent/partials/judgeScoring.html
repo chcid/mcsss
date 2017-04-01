@@ -721,6 +721,9 @@
 			</table>
 
 			<table ng-switch-when="2" class="table">
+			<div id="alertMessage" ng-show="speechStopwatch.data.isAlertRaised" align="center">
+			<h2>Time Alert</h2>
+			</div>
 				<tbody>
 					<tr>
 						<td><label>學生姓名:</label></td>
@@ -744,7 +747,7 @@
 													ng-disabled="speechStopwatch.data.intM!=0 || speechStopwatch.data.intS!=0"
 													ng-hide="speechStopwatch.data.isRunning" type="button"
 													class="btn btn-success btn-lg"
-													ng-click="speechStopwatch.start()">Start -
+													ng-click="startStopwatch(180,175)">Start -
 													{{speechStopwatch.data.m}}:{{speechStopwatch.data.s}}:{{speechStopwatch.data.ms}}</button>
 												<button ng-show="speechStopwatch.data.isRunning"
 													type="button" class="btn  btn-danger btn-lg"

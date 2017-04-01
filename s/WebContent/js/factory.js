@@ -48,6 +48,9 @@ angular.module('speechApp').factory('dataFactory', [ '$http', function($http) {
 } ]).constant('SW_DELAI', 100)
 .factory('stopwatch', function (SW_DELAI,$timeout) {
     var data = { 
+    		isAlertRaised: false,
+    		alertThreshold: 0,
+    		alertTime: 0,    		
     		start: 0,
     		isRunning: false,
             value: 0,
@@ -58,12 +61,13 @@ angular.module('speechApp').factory('dataFactory', [ '$http', function($http) {
             intS: 0,
             laps: []
         },
-        stopwatch = null;
-        
-    var start = function () {
+        stopwatch = null; 
+    var start = function (alertTimeIn = 0, alertThresholdIn = 0) {
+    	data.alertTime = alertTimeIn;
+    	data.alertThreshold = alertThresholdIn; 
     if ( !data.isRunning ){
     	data.isRunning = true;
-    } 
+    }
     if( 0 == data.start ){
 		data.start = new Date().getTime()/100;
 	}
@@ -71,7 +75,7 @@ angular.module('speechApp').factory('dataFactory', [ '$http', function($http) {
         stopwatch = $timeout(function() {
             data.value = current - data.start;
             pushToHMS();
-            start();
+            start(data.alertTime, data.alertThreshold);
         }, SW_DELAI);
     };
 
@@ -79,6 +83,9 @@ angular.module('speechApp').factory('dataFactory', [ '$http', function($http) {
         $timeout.cancel(stopwatch);
         data.isRunning = false;
         stopwatch = null;
+        data.isAlertRaised = false;
+        data.alertTime = 0;
+        data.alertThreshold = 0;
     };
     
     var pad = function (num, size) {
@@ -95,6 +102,16 @@ angular.module('speechApp').factory('dataFactory', [ '$http', function($http) {
     	data.intS = Math.floor( time / divid );
     	data.s = pad(data.intS,2);
     	data.ms = Math.floor(time % divid);
+    	if ( 0 != data.alertTime )
+    	{
+    		if ( (time/divid) + data.alertThreshold >= data.alertTime)
+    		{
+    			data.isAlertRaised = true;
+    		}
+    		else{
+    			data.isAlertRaised = false;
+    		}
+    	}
     }
 
     var reset = function () {

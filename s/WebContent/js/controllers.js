@@ -12,10 +12,11 @@ angular
 						'$routeParams',
 						'$timeout',
 						'$location',
-						function($scope, dataFactory, $routeParams, $timeout, $location) {
+						function($scope, dataFactory, $routeParams, $timeout,
+								$location) {
 							// var scoreMonitor = null;
 							$scope.scoreMonitor = null;
-							
+
 							var startMonitor = function() {
 								$scope.scoreMonitor = $timeout(function() {
 									selectedContestGroupChanged();
@@ -24,7 +25,7 @@ angular
 							};
 							var getShowJudge = function() {
 								$scope.showJudge = $location.search()['showJudge'];
-								//alert($scope.showJudge);
+								// alert($scope.showJudge);
 							};
 							getShowJudge();
 							$scope.startMonitor = function() {
@@ -89,7 +90,8 @@ angular
 							$scope.abstainedUpdater = null;
 							var startAbstainedUpdater = function() {
 								$scope.abstainedUpdater = $timeout(function() {
-									if (!$scope.isUpdating && !$scope.isDropdownFocused) {
+									if (!$scope.isUpdating
+											&& !$scope.isDropdownFocused) {
 										loadContestorsOnlyForTheAbstained();
 									}
 									startAbstainedUpdater();
@@ -127,6 +129,18 @@ angular
 
 							// console.log($scope.scoreRanges);
 							$scope.speechStopwatch = stopwatch;
+
+							$scope.startStopwatch = function() {
+								if ($scope.selectedContestGroup.scoreRule.name
+										.indexOf('看圖說故事') === 0) {
+									$scope.speechStopwatch
+											.start(
+													$scope.selectedContestGroup.timeLimitRule.maxLimit,
+													30);
+								} else {
+									$scope.speechStopwatch.start();
+								}
+							}
 
 							$scope.doSignAndSubmit = function() {
 								// console.log(record);
@@ -190,7 +204,7 @@ angular
 																								if (contestor.finalRank != result.finalRank) {
 																									contestor.finalRank = result.finalRank;
 																								}
-																								if (result.scoreMarking){
+																								if (result.scoreMarking) {
 																									contestor.scoreMarking = result.scoreMarking;
 																								}
 																							}
@@ -437,54 +451,51 @@ angular
 								$scope.isScoring = false;
 								$scope.speechStopwatch.stop();
 							};
-							
-							$scope.setDropdownFocused = function(){
+
+							$scope.setDropdownFocused = function() {
 								$scope.isDropdownFocused = true;
 							};
-							
-							$scope.setDropdownBlur = function(){
+
+							$scope.setDropdownBlur = function() {
 								$scope.isDropdownFocused = false;
 							};
-							
-							$scope.submitScoreMarking = function(record, scoreMarking) {
+
+							$scope.submitScoreMarking = function(record,
+									scoreMarking) {
 								$scope.isUpdating = true;
 								$scope.isDropdownFocused = false;
-								//$scope.justUpdatedId = id;
+								// $scope.justUpdatedId = id;
 								$scope.justUpdatedIdContestor = record.idcontestor;
 								console.log(scoreMarking);
 								$scope.speechStopwatch.stop();
 								var tableName = "speech_score/score_marking";
-								dataFactory
-										.updateRecord(scoreMarking, tableName)
-										.success(
-												function() {
-													$scope.status = 'Updated '
-															+ +'! Refreshing '
-															+ tableName
-															+ ' list.';
-													loadContestors();
-													// $scope.isUpdating =
-													// false;
-												})
-										.error(
-												function(error) {
-													$scope.status = 'Unable to update '
-															+ tableName
-															+ ': '
-															+ error.message;
-													// $scope.isUpdating =
-													// false;
-													console.log($scope.status);
-													$("#networkErrorModal")
-															.modal();
-													$scope.isUpdating = false;
-													return false;
-												});
+								dataFactory.updateRecord(scoreMarking,
+										tableName).success(
+										function() {
+											$scope.status = 'Updated '
+													+ +'! Refreshing '
+													+ tableName + ' list.';
+											loadContestors();
+											// $scope.isUpdating =
+											// false;
+										}).error(
+										function(error) {
+											$scope.status = 'Unable to update '
+													+ tableName + ': '
+													+ error.message;
+											// $scope.isUpdating =
+											// false;
+											console.log($scope.status);
+											$("#networkErrorModal").modal();
+											$scope.isUpdating = false;
+											return false;
+										});
 								$scope.isScoring = false;
 
 							};
-							
-							$scope.submitOneScore = function(record, speechScore, id) {
+
+							$scope.submitOneScore = function(record,
+									speechScore, id) {
 								$scope.isUpdating = true;
 								$scope.isDropdownFocused = false;
 								$scope.justUpdatedId = id;
