@@ -68,7 +68,7 @@
 					<!-- th
 						colspan="{{selectedContestGroup.scoreRule.scoreRuleItems.length}}+1"-->
 					<th valign="top" height="100%"
-						ng-repeat="contestorScore in contestors[0].contestorScores | getOnlyRoleFilter:'[1,4]' | orderBy: ['judge.role.idrole','judge.idjudge']:true">{{contestorScore.judge.idjudge}}<div ng-show="showJudge">-{{contestorScore.judge.staff.chineseLastName}}{{contestorScore.judge.staff.chineseFirstName}}-{{contestorScore.judge.role.name}}</div>
+						ng-repeat="contestorScore in contestors[0].contestorScores | getOnlyRoleFilter:'[1,4]' | orderBy: ['judge.role.idrole','judge.idjudge']:true">{{contestorScore.judge.staff.idstaff}}<div ng-show="showJudge">-{{contestorScore.judge.staff.chineseLastName}}{{contestorScore.judge.staff.chineseFirstName}}-{{contestorScore.judge.role.name}}</div>
 						<table border="1" width="120px">
 							<tr>
 								<th width="33%" valign="top"
@@ -79,7 +79,7 @@
 					</th>
 					<th
 						ng-repeat="contestorScore in contestors[0].contestorScores | getOnlyRoleFilter:'[2]' | orderBy: 'judge.idjudge'">
-						{{contestorScore.judge.idjudge}}<div ng-show="showJudge">-{{contestorScore.judge.staff.chineseLastName}}{{contestorScore.judge.staff.chineseFirstName}}-{{contestorScore.judge.role.name}}</div>
+						{{contestorScore.judge.staff.idstaff}}<div ng-show="showJudge">-{{contestorScore.judge.staff.chineseLastName}}{{contestorScore.judge.staff.chineseFirstName}}-{{contestorScore.judge.role.name}}</div>
 						<table border="1">
 							<thead>
 								<tr>
@@ -91,7 +91,7 @@
 
 					<th
 						ng-repeat="contestorScore in contestors[0].contestorScores | getOnlyRoleFilter:'[3,4]' | orderBy: 'judge.role.idrole' | limitTo: 1">
-						{{contestorScore.judge.idjudge}}<div ng-show="showJudge">-{{contestorScore.judge.staff.chineseLastName}}{{contestorScore.judge.staff.chineseFirstName}}-{{contestorScore.judge.role.name}}</div>
+						{{contestorScore.judge.staff.idstaff}}<div ng-show="showJudge">-{{contestorScore.judge.staff.chineseLastName}}{{contestorScore.judge.staff.chineseFirstName}}-{{contestorScore.judge.role.name}}</div>
 						<table border="1">
 							<thead>
 								<tr>
