@@ -141,14 +141,9 @@
 					</tr-->
 					<tr>
 						<td><label>Name:</label></td>
-						<td><!-- select class="form-control" ng-model="selectedStaff"
-							ng-options="(selectLoginStaff.idstaff+' - '+selectLoginStaff.chineseLastName+''+selectLoginStaff.chineseFirstName+' - '+selectLoginStaff.englishLastName+', '+selectLoginStaff.englishFirstName ) for selectLoginStaff in selectLoginStaffs | filter:loginNameFilter | orderBy:'englishLastName'">
-								<option value="">-- Please Select your ID / Name --</option-->
-								
-								<select class="form-control" ng-model="selectedStaff"
-							ng-options="(selectLoginStaff.idstaff) for selectLoginStaff in selectLoginStaffs | filter:loginNameFilter | orderBy:'englishLastName'">
-								<option value="">-- Please Select your ID --</option>
-								
+						<td><select class="form-control" ng-model="selectedStaff"
+							ng-options="(selectLoginStaff.chineseLastName+''+selectLoginStaff.chineseFirstName+' - '+selectLoginStaff.englishLastName+', '+selectLoginStaff.englishFirstName ) for selectLoginStaff in selectLoginStaffs | filter:loginNameFilter | orderBy:'englishLastName'">
+								<option value="">-- Please Select your name --</option>
 						</select></td>
 					</tr>
 					<tr>
@@ -167,23 +162,16 @@
 			<table class="table">
 				<tbody>
 					<tr>
-						<td><label><!-- {{selectedStaff.chineseLastName}}{{selectedStaff.chineseFirstName}}
+						<td><label>{{selectedStaff.chineseLastName}}{{selectedStaff.chineseFirstName}}
 								- {{selectedStaff.englishLastName}},
-								{{selectedStaff.englishFirstName}}-->
-								Judge ID: {{selectedStaff.idstaff}}
-								<br>Please select the
+								{{selectedStaff.englishFirstName}}<br>Please select the
 								Group to Score:
 						</label></td>
 					</tr>
 					<tr>
-						<td><!-- select ng-change="selectedContestGroupChanged()"
+						<td><select ng-change="selectedContestGroupChanged()"
 							class="form-control" ng-model="selectedContestGroup"
-							ng-options="(selectContestGroup.contest.name+' - '+selectContestGroup.name+' - '+selectContestGroup.role.name) group by selectContestGroup.contestLocation.name for selectContestGroup in selectContestGroups | orderBy:'name'"-->
-								
-								<select ng-change="selectedContestGroupChanged()"
-							class="form-control" ng-model="selectedContestGroup"
-							ng-options="(selectContestGroup.contest.name+' - '+selectContestGroup.name) group by selectContestGroup.contestLocation.name for selectContestGroup in selectContestGroups | orderBy:'name'">
-								
+							ng-options="(selectContestGroup.contest.name+' - '+selectContestGroup.name+' - '+selectContestGroup.role.name) group by selectContestGroup.contestLocation.name for selectContestGroup in selectContestGroups | orderBy:'name'">
 								<option value="">-- Please Select one --</option>
 						</select></td>
 					</tr>
@@ -425,9 +413,9 @@
 								<th>評審排名</th>
 								<th>點名扣分</th>
 
-								<th ng-if="selectedContestGroup.contest.name.indexOf('Inter') < 0">閃光燈</th>
+								<th>閃光燈</th>
 
-								<th ng-if="selectedContestGroup.contest.name.indexOf('Inter') < 0">接聽電話扣分</th>
+								<th>接聽電話扣分</th>
 
 								<th>家長提詞 / 手勢</th>
 
@@ -473,7 +461,7 @@
 										<span class="label label-default"
 											ng-class="{'label label-warning':record.scoreMarking.rollCallMarking=='-1','label label-default':record.scoreMarking.rollCallMarking!='-1'}">{{record.scoreMarking.rollCallMarking}}</span>
 									</h4></td>
-								<td ng-if="selectedContestGroup.contest.name.indexOf('Inter') < 0"><input ng-hide="record.penaltyChiefExist"
+								<td><input ng-hide="record.penaltyChiefExist"
 									ng-disabled="record.penaltyChiefExist"
 									ng-change="submitScoreMarking(record, record.scoreMarking)"
 									ng-model="record.scoreMarking.flashLightMarking"
@@ -484,7 +472,7 @@
 										<span class="label label-default"
 											ng-class="{'label label-warning':record.scoreMarking.flashLightMarking=='-1','label label-default':record.scoreMarking.flashLightMarking!='-1'}">{{record.scoreMarking.flashLightMarking}}</span>
 									</h4></td>
-								<td ng-if="selectedContestGroup.contest.name.indexOf('Inter') < 0"><input ng-hide="record.penaltyChiefExist"
+								<td><input ng-hide="record.penaltyChiefExist"
 									ng-disabled="record.penaltyChiefExist"
 									ng-change="submitScoreMarking(record, record.scoreMarking)"
 									ng-model="record.scoreMarking.phoneUsed" ng-true-value="-2"
@@ -600,9 +588,9 @@
 
 								<th>點名扣分</th>
 
-								<th ng-if="selectedContestGroup.contest.name.indexOf('Inter') < 0">閃光燈</th>
+								<th>閃光燈</th>
 
-								<th ng-if="selectedContestGroup.contest.name.indexOf('Inter') < 0">接聽電話扣分</th>
+								<th>接聽電話扣分</th>
 
 								<th>家長提詞 / 手勢</th>
 
@@ -631,7 +619,7 @@
 										<span class="label label-default"
 											ng-class="{'label label-warning':record.scoreMarking.rollCallMarking=='-1','label label-default':record.scoreMarking.rollCallMarking!='-1'}">{{record.scoreMarking.rollCallMarking}}</span>
 									</h4></td>
-								<td ng-if="selectedContestGroup.contest.name.indexOf('Inter') < 0"><input ng-change="submitScoreMarking(record, record.scoreMarking)"
+								<td><input ng-change="submitScoreMarking(record, record.scoreMarking)"
 									ng-model="record.scoreMarking.flashLightMarking"
 									ng-true-value="-1" ng-false-value="0"
 									ng-checked="record.scoreMarking.flashLightMarking=='-1'"
@@ -640,7 +628,7 @@
 										<span class="label label-default"
 											ng-class="{'label label-warning':record.scoreMarking.flashLightMarking=='-1','label label-default':record.scoreMarking.flashLightMarking!='-1'}">{{record.scoreMarking.flashLightMarking}}</span>
 									</h4></td>
-								<td ng-if="selectedContestGroup.contest.name.indexOf('Inter') < 0"><input ng-change="submitScoreMarking(record, record.scoreMarking)"
+								<td><input ng-change="submitScoreMarking(record, record.scoreMarking)"
 									ng-model="record.scoreMarking.phoneUsed" ng-true-value="-2"
 									ng-false-value="0"
 									ng-checked="record.scoreMarking.phoneUsed=='-2'"
@@ -691,8 +679,7 @@
 				<button ng-disabled="!isCanBeSubmited" data-toggle="modal"
 					data-target="#signAndSubmitModal" class="btn btn-danger">Sign
 					and Submit ~
-					Judge ID: {{selectedStaff.idstaff}}
-					<!-- {{selectedStaff.chineseLastName}}{{selectedStaff.chineseFirstName}}--></button>
+					{{selectedStaff.chineseLastName}}{{selectedStaff.chineseFirstName}}</button>
 			</div>
 		</div>
 	</div>
